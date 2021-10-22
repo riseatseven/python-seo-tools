@@ -2,3 +2,4 @@ streamlit
 fuzzywuzzy
 pandas
 PIL
+numpy
