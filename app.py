@@ -53,7 +53,7 @@ def get_table_download_link_two(df):
 
 with open("style.css") as f:
     st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-image = Image.open('seo-tools.PNG')
+image = Image.open('seo-tools2.PNG')
 st.sidebar.image(image)
 st.text("")
 st.sidebar.title("Available tools")
