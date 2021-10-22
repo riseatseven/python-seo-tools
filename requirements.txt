@@ -4,3 +4,5 @@ wordcloud
 matplotlib
 gunicorn
 fuzzywuzzy
+PIL
+numpy
