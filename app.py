@@ -97,7 +97,7 @@ if select =='Keyword categoriser':
     st.markdown("<p style='font-weight:normal'>Populate <strong>Column1</strong> with the set of text or URLs that you want to lookup/match, and populate <strong>Column2</strong> with the text or URLs that you want to look up against.</p>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>Please only populate up to 5000 entries in each column otherwise it will break</strong>!</p>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'>Now upload the populated file to get the matches:</p>", unsafe_allow_html=True)
-    keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='3')
+    keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='4')
     if keyword_file is not None:
         st.write("Categorising...")
         df = querycat.pd.read_csv(keyword_file, header=0)
