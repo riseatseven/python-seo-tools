@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "34f23343f7adf77c5df18b43231ae36b599f8a3502f5afc90205a6102cfe6296"
+            "sha256": "00b3223d10de30940edf4dc050e4b83e8c1d8c49acc728e18db0d4da10787a40"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -972,6 +972,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==0.7.0"
+        },
+        "pyfpgrowth": {
+            "hashes": [
+                "sha256:a3e5780385241d90d3ae5cabcca767eb65427b0a908014d42164b3ea8899f1d0"
+            ],
+            "index": "pypi",
+            "version": "==1.0"
         },
         "pygments": {
             "hashes": [
