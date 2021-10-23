@@ -13,6 +13,7 @@ matplotlib = "*"
 gunicorn = "*"
 scikit-learn = "*"
 fuzzywuzzy = "*"
+mpmath = "*"
 
 [requires]
 python_version = "3.8"
