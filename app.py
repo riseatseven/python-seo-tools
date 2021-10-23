@@ -31,33 +31,6 @@ def checker(wrong_options,correct_options):
             ratio_array.append(x[1])
     return names_array,ratio_array
 
-def find_noun(keyword):
-    tokens = nltk.word_tokenize(keyword)
-    tagged = nltk.pos_tag(tokens)
-    noun = [w for w,t in tagged if "NN" in t]
-    if len(noun) < 1:
-        return ""
-    else:
-        return noun[0]
-
-def find_verb(keyword):
-    tokens = nltk.word_tokenize(keyword)
-    tagged = nltk.pos_tag(tokens)
-    verb = [w for w,t in tagged if "VB" in t]
-    if len(verb) < 1:
-        return ""
-    else:
-        return verb[0]
-
-def find_adjective(keyword):
-    tokens = nltk.word_tokenize(keyword)
-    tagged = nltk.pos_tag(tokens)
-    adjective = [w for w,t in tagged if "JJ" in t]
-    if len(adjective) < 1:
-        return ""
-    else:
-        return adjective[0]
-
 def get_table_download_link(df):
     """Generates a link allowing the data in a given panda dataframe to be downloaded
     in:  dataframe
