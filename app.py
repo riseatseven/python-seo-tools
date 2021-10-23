@@ -5,6 +5,7 @@ from PIL import Image
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import base64
+import querycat
 
 DATA_URL = (
     "fuzzy-matching-template.csv"
@@ -29,6 +30,33 @@ def checker(wrong_options,correct_options):
             names_array.append(x[0])
             ratio_array.append(x[1])
     return names_array,ratio_array
+
+def find_noun(keyword):
+    tokens = nltk.word_tokenize(keyword)
+    tagged = nltk.pos_tag(tokens)
+    noun = [w for w,t in tagged if "NN" in t]
+    if len(noun) < 1:
+        return ""
+    else:
+        return noun[0]
+
+def find_verb(keyword):
+    tokens = nltk.word_tokenize(keyword)
+    tagged = nltk.pos_tag(tokens)
+    verb = [w for w,t in tagged if "VB" in t]
+    if len(verb) < 1:
+        return ""
+    else:
+        return verb[0]
+
+def find_adjective(keyword):
+    tokens = nltk.word_tokenize(keyword)
+    tagged = nltk.pos_tag(tokens)
+    adjective = [w for w,t in tagged if "JJ" in t]
+    if len(adjective) < 1:
+        return ""
+    else:
+        return adjective[0]
 
 def get_table_download_link(df):
     """Generates a link allowing the data in a given panda dataframe to be downloaded
@@ -59,7 +87,7 @@ st.text("")
 st.sidebar.title("Available tools")
 st.text("")
 st.sidebar.markdown("### Which tool do you need?")
-select = st.sidebar.selectbox('Choose tool', ['Fuzzy matching tool'], key='1')
+select = st.sidebar.selectbox('Choose tool', ['Fuzzy matching tool', 'Keyword categoriser'], key='1')
 st.text("")
 
 if select =='Fuzzy matching tool':
@@ -88,3 +116,18 @@ if select =='Fuzzy matching tool':
         st.markdown('### Download the full dataset:')
         st.write("")
         st.markdown(get_table_download_link_two(matches), unsafe_allow_html=True)
+if select =='Keyword categoriser':
+    st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Fuzzy Matching Tool</strong></h2>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'>This tool will give you the closest match for text (such as URLs), plus a score (out of 100) as to how close the match is.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
+    st.markdown(get_table_download_link(data), unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'>Populate <strong>Column1</strong> with the set of text or URLs that you want to lookup/match, and populate <strong>Column2</strong> with the text or URLs that you want to look up against.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'><strong>Please only populate up to 5000 entries in each column otherwise it will break</strong>!</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'>Now upload the populated file to get the matches:</p>", unsafe_allow_html=True)
+    keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='3')
+    if keyword_file is not None:
+        st.write("Categorising...")
+        df = querycat.pd.read_csv(keyword_file, header=0)
+        catz = querycat.Categorize(df, 'Query', min_support=7,  alg='apriori')
+        categories = catz.counts.head()
+        st.write(categories)
