@@ -100,7 +100,7 @@ if select =='Keyword categoriser':
     keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='4')
     if keyword_file is not None:
         st.write("Categorising...")
-        df = querycat.pd.read_csv(keyword_file, header=0)
-        catz = querycat.Categorize(df, 'Keywords', min_support=2,  alg='apriori')
+        dffinal = querycat.pd.read_csv(keyword_file, header=0)
+        catz = querycat.Categorize(dffinal, 'Keywords', min_support=2,  alg='apriori')
         categories = catz.counts.head()
         st.write(categories)
