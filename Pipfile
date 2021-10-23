@@ -21,6 +21,7 @@ pyfpgrowth = "*"
 torch = "==1.4.0"
 transformers = "*"
 umap-learn = "*"
+apriori = "*"
 
 [requires]
 python_version = "3.8"
