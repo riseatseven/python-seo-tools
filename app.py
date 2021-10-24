@@ -97,5 +97,5 @@ if select =='Keyword categoriser':
         st.write("Categorising...")
         df = querycat.pd.read_csv(keyword_file)
         catz = querycat.Categorize(df, 'Keywords', min_support=3,  alg='apriori')
-        categories = catz.df.head(46)
+        categories = catz.df.head(50)
         st.write(categories)
