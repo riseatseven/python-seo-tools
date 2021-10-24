@@ -94,7 +94,7 @@ if select =='Keyword categoriser':
     st.markdown("<p style='font-weight:normal'><strong>UNDER CONSTRUCTION</strong></p>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'>How many mentions for a keyword before it counts as a category?</p>", unsafe_allow_html=True)
     user_input = st.text_input("Enter number below", 3)
-    user_input = int(user_unput)
+    user_input = int(user_input)
     keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='4')
     if keyword_file is not None:
         st.write("Categorising...")
