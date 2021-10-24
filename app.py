@@ -61,6 +61,15 @@ def get_table_download_link_three(df):
     href = f'<a href="data:file/csv;base64,{b64}" download="keyword_categoriser_template.csv">Download the template to populate</a>'
     return href
 
+def get_table_download_link_four(df):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}" download="matched_URLs.csv">Download csv file</a>'
+    return href
 
 with open("style.css") as f:
     st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
@@ -103,7 +112,7 @@ if select =='Keyword categoriser':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'>This tool uses counts of keywords to quickly find common themes in a list of keywords.</p>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
-    st.markdown(get_table_download_link(data), unsafe_allow_html=True)
+    st.markdown(get_table_download_link_three(data), unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>Then choose how many times you want a keyword to be mentioned before it becomes a category (test this with multiple options to find what works best).</strong></p>", unsafe_allow_html=True)
     user_input = st.text_input("How many mentions for a keyword before you want to count it as a category?", 3)
     user_input = int(user_input)
