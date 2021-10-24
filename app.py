@@ -110,7 +110,7 @@ if select =='Fuzzy matching tool':
         st.markdown(get_table_download_link_two(matches), unsafe_allow_html=True)
 if select =='Keyword categoriser':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
-    st.markdown("<p style='font-weight:normal'>This tool uses counts of keywords to quickly find common themes in a list of keywords.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'>This tool uses <strong>counts of keywords</strong> to quickly find common themes from a list of search queries.</p>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
     st.markdown(get_table_download_link_three(data), unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>Then choose how many times you want a keyword to be mentioned before it becomes a category (test this with multiple options to find what works best).</strong></p>", unsafe_allow_html=True)
