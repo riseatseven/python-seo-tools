@@ -91,6 +91,7 @@ if select =='Fuzzy matching tool':
         st.markdown(get_table_download_link_two(matches), unsafe_allow_html=True)
 if select =='Keyword categoriser':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'><strong>UNDER CONSTRUCTION</strong></p>", unsafe_allow_html=True)
     keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='4')
     if keyword_file is not None:
         st.write("Categorising...")
