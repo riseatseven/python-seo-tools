@@ -92,10 +92,12 @@ if select =='Fuzzy matching tool':
 if select =='Keyword categoriser':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>UNDER CONSTRUCTION</strong></p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'>How many mentions for a keyword before it counts as a category?</p>", unsafe_allow_html=True)
+    user_input = st.text_input("label goes here", 3)
     keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='4')
     if keyword_file is not None:
         st.write("Categorising...")
         df = querycat.pd.read_csv(keyword_file)
-        catz = querycat.Categorize(df, 'Keywords', min_support=3,  alg='apriori')
+        catz = querycat.Categorize(df, 'Keywords', min_support=user_input,  alg='apriori')
         categories = catz.df.head(50)
         st.write(categories)
