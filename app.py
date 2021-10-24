@@ -106,7 +106,6 @@ if select =='Fuzzy matching tool':
         matches = df1.head(50)
         st.write(matches)
         st.markdown('### Download the full dataset:')
-        st.write("")
         st.markdown(get_table_download_link_two(matches), unsafe_allow_html=True)
 if select =='Keyword categoriser':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
@@ -127,5 +126,4 @@ if select =='Keyword categoriser':
         categories = catz.df.head(50)
         st.write(categories)
         st.markdown('### Download the full dataset:')
-        st.write("")
         st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
