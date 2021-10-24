@@ -38,7 +38,7 @@ def get_table_download_link(df):
     """
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-    href = f'<a href="data:file/csv;base64,{b64}" download="fuzzy-matching_template.csv">Download the template to populate</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="fuzzy_matching_template.csv">Download the template to populate</a>'
     return href
 
 def get_table_download_link_two(df):
@@ -49,6 +49,16 @@ def get_table_download_link_two(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
     href = f'<a href="data:file/csv;base64,{b64}" download="matched_URLs.csv">Download csv file</a>'
+    return href
+
+def get_table_download_link_three(df):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}" download="keyword_categoriser_template.csv">Download the template to populate</a>'
     return href
 
 
@@ -91,10 +101,13 @@ if select =='Fuzzy matching tool':
         st.markdown(get_table_download_link_two(matches), unsafe_allow_html=True)
 if select =='Keyword categoriser':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
-    st.markdown("<p style='font-weight:normal'><strong>UNDER CONSTRUCTION</strong></p>", unsafe_allow_html=True)
-    st.markdown("<p style='font-weight:normal'>How many mentions for a keyword before it counts as a category?</p>", unsafe_allow_html=True)
-    user_input = st.text_input("Enter number below", 3)
+    st.markdown("<p style='font-weight:normal'>This tool uses counts of keywords to quickly find common themes in a list of keywords.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
+    st.markdown(get_table_download_link(data), unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'><strong>Then choose how many times you want a keyword to be mentioned before it becomes a category (test this with multiple options to find what works best).</strong></p>", unsafe_allow_html=True)
+    user_input = st.text_input("How many mentions for a keyword before you want to count it as a category?", 3)
     user_input = int(user_input)
+    st.markdown("<p style='font-weight:normal'>Now upload the populated template:</p>", unsafe_allow_html=True)
     keyword_file = st.file_uploader("Choose a CSV file", type='csv', key='4')
     if keyword_file is not None:
         st.write("Categorising...")
@@ -102,3 +115,6 @@ if select =='Keyword categoriser':
         catz = querycat.Categorize(df, 'Keywords', min_support=user_input,  alg='apriori')
         categories = catz.df.head(50)
         st.write(categories)
+        st.markdown('### Download the full dataset:')
+        st.write("")
+        st.markdown(get_table_download_link_four(catz), unsafe_allow_html=True)
