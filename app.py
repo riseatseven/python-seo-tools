@@ -65,7 +65,7 @@ st.text("")
 
 if select =='Fuzzy matching tool':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Fuzzy Matching Tool</strong></h2>", unsafe_allow_html=True)
-    st.markdown("<p style='font-weight:normal'>This tool will give you the closest match for text (such as URLs), plus a score (out of 100) as to how close the match is.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-weight:normal'>This tool will give you the closest matches between two columns of text (such as URLs), plus a score (out of 100) as to how close the match is.</p>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
     st.markdown(get_table_download_link(data), unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'>Populate <strong>Column1</strong> with the set of text or URLs that you want to lookup/match, and populate <strong>Column2</strong> with the text or URLs that you want to look up against.</p>", unsafe_allow_html=True)
