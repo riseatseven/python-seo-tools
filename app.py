@@ -124,6 +124,7 @@ if select =='Keyword categoriser':
         st.markdown('### Here are (up to) the first 50 keywords and the category for each:')
         st.write("")
         categories = catz.df.head(50)
+        catz.df = catz.df.drop('match_query', 1)
         st.write(categories)
         st.markdown('### Download the full dataset:')
         st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
