@@ -121,7 +121,7 @@ if select =='Keyword categoriser':
         st.write("Categorising...")
         df = querycat.pd.read_csv(keyword_file)
         catz = querycat.Categorize(df, 'Keywords', min_support=user_input,  alg='apriori')
-        catz.df.drop('match_query', 1, inplace=True)
+        catz.df.drop('match_queries', 1, inplace=True)
         st.markdown('### Here are (up to) the first 50 keywords and the category for each:')
         st.write("")
         categories = catz.df.head(50)
