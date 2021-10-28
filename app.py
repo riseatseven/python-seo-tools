@@ -25,6 +25,18 @@ else:
 
     data = load_data()
 
+    DATA_URL2 = (
+        "keyword_categoriser_template.csv"
+    )
+
+    @st.cache(persist=True)
+    def load_data():
+        data2 = pd.read_csv(DATA_URL2)
+        return data
+
+    data2 = load_data()
+
+
     def checker(wrong_options,correct_options):
         names_array=[]
         ratio_array=[]
@@ -118,7 +130,7 @@ else:
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>This tool uses <strong>counts of keywords</strong> to quickly find common themes from a list of search queries. It uses <a href='https://github.com/jroakes/querycat'>Querycat from JR Oakes.</a></p>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template - putting your list into the 'Keywords' column:</strong></p>", unsafe_allow_html=True)
-        st.markdown(get_table_download_link_three(data), unsafe_allow_html=True)
+        st.markdown(get_table_download_link_three(data2), unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Then choose how many times you want a keyword to be mentioned before it becomes a category (test this with multiple options to find what works best).</strong></p>", unsafe_allow_html=True)
         user_input = st.text_input("How many mentions for a keyword before you want to count it as a category?", 3)
         user_input = int(user_input)
