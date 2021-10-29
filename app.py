@@ -90,6 +90,16 @@ else:
         href = f'<a href="data:file/csv;base64,{b64}" download="categorised_keywords.csv">Download csv file</a>'
         return href
 
+    def get_table_download_link_five(df):
+        """Generates a link allowing the data in a given panda dataframe to be downloaded
+        in:  dataframe
+        out: href string
+        """
+        csv = df.to_csv(index=True)
+        b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+        href = f'<a href="data:file/csv;base64,{b64}" download="top-performers.csv">Download all top performer data</a>'
+        return href
+
     with open("style.css") as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
     image = Image.open('seo-tools5.PNG')
@@ -98,7 +108,7 @@ else:
     st.sidebar.title("Available tools")
     st.text("")
     st.sidebar.markdown("### Which tool do you need?")
-    select = st.sidebar.selectbox('Choose tool', ['Fuzzy matching tool', 'Keyword categoriser'], key='1')
+    select = st.sidebar.selectbox('Choose tool', ['Fuzzy matching tool', 'Keyword categoriser', 'SERP top performer analysis'], key='1')
     st.text("")
 
     if select =='Fuzzy matching tool':
@@ -147,3 +157,87 @@ else:
             st.write(categories)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
+    if select =='SERP top performer analysis':
+        st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>SERP Top Performer Analysis</strong></h2>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>Upload the <strong>SERPs Data</strong> report from <strong>SEOMonitor</strong> here:</p>", unsafe_allow_html=True)
+        visibility_file = st.file_uploader("Choose a CSV file", type='csv', key='5')
+        if visibility_file is not None:
+            st.write("Finding top performers...")
+            df = pd.read_csv(visibility_file)
+            df2 = pd.read_csv('visibility-scores.csv')
+            df3 = pd.read_csv('click-through-rates.csv')
+            df['Domain'] = df['Landing page 1']
+            df['Domain'] = df['Domain'].replace(regex={r'https:\/\/': ''})
+            df['Domain'] = df['Domain'].replace(regex={r'http:\/\/': ''})
+            df['Domain'] = df['Domain'].replace(regex={r'www\.': ''})
+            df['Domain'] = df['Domain'].replace(regex={r'/.*': ''})
+            df.sort_values(by=['Rank'], axis=0, ascending=True, inplace=True)
+            df['Dedupe Column'] = df['Keyword'] + df['Device'] + df['Domain']
+            df.drop_duplicates(subset=['Dedupe Column'], inplace=True)
+            df.drop('Dedupe Column', axis=1, inplace=True)
+            inner_join = pd.merge(df,
+                      df2,
+                      on ='Rank',
+                      how ='inner')
+            inner_join2 = pd.merge(inner_join,
+                      df3,
+                      on ='Rank',
+                      how ='inner')
+            inner_join2['Search Volume'] = inner_join2['Search Volume'].astype(int)
+            inner_join2['CTR'] = inner_join2['CTR'].astype(float)
+            inner_join2['Estimated_Traffic_Score'] = inner_join2['Search Volume'] * inner_join2['CTR']
+            score_table = inner_join2.filter(items=['Device', 'Domain', 'Visibility_Score', 'Estimated_Traffic_Score'])
+            value_list = ["M"]
+            boolean_series = score_table.Device.isin(value_list)
+            visibility_score_mobile = score_table[boolean_series]
+            visibility_score_mobile = visibility_score_mobile.groupby('Domain')
+            visibility_score_sum = visibility_score_mobile.sum()
+            visibility_score_sum.sort_values(by=['Estimated_Traffic_Score'], axis=0, ascending=False, inplace=True)
+            keyword_counts = inner_join2.filter(items=['Keyword', 'Search Volume'])
+            keyword_counts.drop_duplicates(subset=['Keyword'], inplace=True)
+            total_possible_visibility = len(keyword_counts) * 20
+            total_possible_traffic = keyword_counts['Search Volume'].sum() * 0.1507
+            visibility_score_sum['Visibility_Score_Percentage'] = round((visibility_score_sum['Visibility_Score'] / total_possible_visibility) * 100)
+            visibility_score_sum['Traffic_Score_Percentage'] = round((visibility_score_sum['Estimated_Traffic_Score'] / total_possible_traffic) * 100)
+            visibility_score_sum['Visibility Score Percentage'] = visibility_score_sum['Visibility_Score_Percentage'].astype(int)
+            visibility_score_sum['Traffic Score Percentage'] = visibility_score_sum['Traffic_Score_Percentage'].astype(int)
+            final_df = visibility_score_sum.head(5)
+            fig = go.Figure()
+            fig.add_trace(go.Bar(x=final_df.index, y=final_df['Traffic Score Percentage'], name='Estimated Traffic Score',
+                            marker_color='#ff0bac', text=final_df['Traffic Score Percentage']
+                            ))
+            fig.add_trace(go.Bar(x=final_df.index, y=final_df['Visibility Score Percentage'], name='Visibility Score',
+                            marker_color='#a13bff', text=final_df['Visibility Score Percentage']
+                            ))
+            fig.update_traces(texttemplate='%{text:.2s}', textposition='inside')
+            fig.update_layout(
+                plot_bgcolor="#ffffff",
+                title='Top 5 Industry Performers',
+                titlefont_size=20,
+                title_x=0.5,
+                xaxis_tickfont_size=14,
+                yaxis=dict(
+                    title='Percentage (of Best Possible)',
+                    titlefont_size=16,
+                    tickfont_size=14,
+                ),
+                legend=dict(
+                    xanchor = "center",
+                    x=0.5,
+                    yanchor="bottom",
+                    y=1.05,
+                    orientation="h",
+                    bgcolor='rgba(255, 255, 255, 0)',
+                    bordercolor='rgba(255, 255, 255, 0)'
+                ),
+                barmode='group',
+                bargap=0.15, # gap between bars of adjacent location coordinates.
+                bargroupgap=0.1 # gap between bars of the same location coordinate.
+            )
+            st.plotly_chart(fig)
+            visibility_score_sum.drop('Visibility_Score', axis=1, inplace=True)
+            visibility_score_sum.drop('Estimated_Traffic_Score', axis=1, inplace=True)
+            visibility_score_sum.drop('Visibility_Score_Percentage', axis=1, inplace=True)
+            visibility_score_sum.drop('Traffic_Score_Percentage', axis=1, inplace=True)
+            st.markdown('### Download the full dataset:')
+            st.markdown(get_table_download_link_five(visibility_score_sum), unsafe_allow_html=True)
