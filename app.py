@@ -6,6 +6,9 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import base64
 import querycat
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.io as pio
 
 if 'password' not in st.session_state:
     password = st.text_input('Enter password', value='', type='password')
