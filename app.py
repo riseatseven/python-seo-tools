@@ -9,6 +9,7 @@ import querycat
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
+from prophet import Prophet
 
 if 'password' not in st.session_state:
     password = st.text_input('Enter password', value='', type='password')
@@ -111,9 +112,63 @@ else:
     st.sidebar.title("Available tools")
     st.text("")
     st.sidebar.markdown("### Which tool do you need?")
-    select = st.sidebar.selectbox('Choose tool', ['Fuzzy matching tool', 'Keyword categoriser', 'SERP top performer analysis'], key='1')
+    select = st.sidebar.selectbox('Choose tool', ['Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'SERP top performer analysis'], key='1')
     st.text("")
 
+    if select =='Forecasting tool':
+        st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
+        forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
+        if forecast_file is not None:
+            st.write("Forecasting...")
+            df = pd.read_csv(forecast_file)
+            m = Prophet()
+            m.fit(df)
+            future = m.make_future_dataframe(periods=365)
+            future.tail()
+            forecast = m.predict(future)
+            forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail()
+            dffinal = pd.DataFrame()
+            dffinal['date'] = forecast['ds']
+            dffinal['actual'] = df['y']
+            dffinal['forecast'] = forecast['yhat']
+            dffinal = dffinal.fillna('')
+            dffinal = dffinal.set_index('date')
+            fig = go.Figure()
+            fig.add_trace(go.Line(x=dffinal.index, y=dffinal['actual'], name='Actual',
+                             text=dffinal['actual'], line=dict(color='#ff0bac', width=3)
+                            ))
+            fig.add_trace(go.Line(x=dffinal.index, y=dffinal['forecast'], name='Forecast',
+                            text=dffinal['forecast'], line=dict(color='#a13bff', width=3)
+                            ))
+            fig.update_layout(
+                plot_bgcolor="#ffffff",
+                title='Forecast',
+                titlefont_size=20,
+                title_x=0.5,
+                xaxis=dict(
+                    title='Date',
+                    titlefont_size=16,
+                    tickfont_size=14,
+                ),
+                yaxis=dict(
+                    title='Metric',
+                    titlefont_size=16,
+                    tickfont_size=14,
+                ),
+                legend=dict(
+                    xanchor = "center",
+                    x=0.5,
+                    yanchor="bottom",
+                    y=1.02,
+                    orientation="h",
+                    bgcolor='rgba(255, 255, 255, 0)',
+                    bordercolor='rgba(255, 255, 255, 0)'
+                ),
+                barmode='group',
+                bargap=0.15, # gap between bars of adjacent location coordinates.
+                bargroupgap=0.1 # gap between bars of the same location coordinate.
+            )
+            st.plotly_chart(fig)
     if select =='Fuzzy matching tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Fuzzy Matching Tool</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>This tool will give you the closest matches between two columns of text (such as URLs), plus a score (out of 100) as to how close the match is.</p>", unsafe_allow_html=True)
@@ -244,3 +299,4 @@ else:
             visibility_score_sum.drop('Traffic_Score_Percentage', axis=1, inplace=True)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_five(visibility_score_sum), unsafe_allow_html=True)
+
