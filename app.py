@@ -202,7 +202,7 @@ else:
                 bargroupgap=0.1 # gap between bars of the same location coordinate.
             )
             st.plotly_chart(fig)
-            st.write(matches)
+            st.write(dffinal)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_seven(dffinal), unsafe_allow_html=True)
     if select =='Fuzzy matching tool':
