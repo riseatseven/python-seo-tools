@@ -201,7 +201,7 @@ else:
                 bargroupgap=0.1 # gap between bars of the same location coordinate.
             )
             st.plotly_chart(fig)
-            st.markdown(get_table_download_link_seven(dffinal), unsafe_allow_html=True
+            st.markdown(get_table_download_link_seven(dffinal), unsafe_allow_html=True)
     if select =='Fuzzy matching tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Fuzzy Matching Tool</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>This tool will give you the closest matches between two columns of text (such as URLs), plus a score (out of 100) as to how close the match is.</p>", unsafe_allow_html=True)
