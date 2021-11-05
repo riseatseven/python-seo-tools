@@ -147,9 +147,10 @@ else:
     st.text("")
     if select =='Forecasting tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
-        forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
         st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
         st.markdown(get_table_download_link(data3), unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>Now upload the populated file to get the forecast:</p>", unsafe_allow_html=True)
+        forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
         if forecast_file is not None:
             st.write("Forecasting...")
             df = pd.read_csv(forecast_file)
@@ -201,6 +202,8 @@ else:
                 bargroupgap=0.1 # gap between bars of the same location coordinate.
             )
             st.plotly_chart(fig)
+            st.write(matches)
+            st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_seven(dffinal), unsafe_allow_html=True)
     if select =='Fuzzy matching tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Fuzzy Matching Tool</strong></h2>", unsafe_allow_html=True)
