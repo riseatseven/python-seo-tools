@@ -46,7 +46,7 @@ else:
 
     @st.cache(persist=True)
     def load_data():
-        data3 = pd.read_csv(DATA_URL2)
+        data3 = pd.read_csv(DATA_URL3)
         return data3
 
     data3 = load_data()
