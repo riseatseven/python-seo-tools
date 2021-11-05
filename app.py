@@ -41,7 +41,7 @@ else:
     data2 = load_data()
 
     DATA_URL3 = (
-        "forecasting-template.csv"
+        "forecast-template.csv"
     )
 
     @st.cache(persist=True)
