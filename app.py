@@ -148,7 +148,7 @@ else:
     if select =='Forecasting tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
-        st.markdown(get_table_download_link_six(data6), unsafe_allow_html=True)
+        st.markdown(get_table_download_link_six(data3), unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>Now upload the populated file to get the forecast:</p>", unsafe_allow_html=True)
         forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
         if forecast_file is not None:
