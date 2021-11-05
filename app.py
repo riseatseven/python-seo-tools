@@ -40,6 +40,17 @@ else:
 
     data2 = load_data()
 
+    DATA_URL3 = (
+        "forecasting-template.csv"
+    )
+
+    @st.cache(persist=True)
+    def load_data():
+        data3 = pd.read_csv(DATA_URL2)
+        return data3
+
+    data3 = load_data()
+
 
     def checker(wrong_options,correct_options):
         names_array=[]
@@ -104,6 +115,26 @@ else:
         href = f'<a href="data:file/csv;base64,{b64}" download="top-performers.csv">Download all top performer data</a>'
         return href
 
+    def get_table_download_link_six(df):
+        """Generates a link allowing the data in a given panda dataframe to be downloaded
+        in:  dataframe
+        out: href string
+        """
+        csv = df.to_csv(index=False)
+        b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+        href = f'<a href="data:file/csv;base64,{b64}" download="forecast-template.csv">Download forecast template</a>'
+        return href
+
+    def get_table_download_link_seven(df):
+        """Generates a link allowing the data in a given panda dataframe to be downloaded
+        in:  dataframe
+        out: href string
+        """
+        csv = df.to_csv(index=True)
+        b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+        href = f'<a href="data:file/csv;base64,{b64}" download="forecast-data.csv">Download forecast data</a>'
+        return href
+
     with open("style.css") as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
     image = Image.open('seo-tools5.PNG')
@@ -118,6 +149,8 @@ else:
     if select =='Forecasting tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
         forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
+        st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
+        st.markdown(get_table_download_link(data3), unsafe_allow_html=True)
         if forecast_file is not None:
             st.write("Forecasting...")
             df = pd.read_csv(forecast_file)
@@ -169,6 +202,7 @@ else:
                 bargroupgap=0.1 # gap between bars of the same location coordinate.
             )
             st.plotly_chart(fig)
+            st.markdown(get_table_download_link_seven(dffinal), unsafe_allow_html=True
     if select =='Fuzzy matching tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Fuzzy Matching Tool</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>This tool will give you the closest matches between two columns of text (such as URLs), plus a score (out of 100) as to how close the match is.</p>", unsafe_allow_html=True)
@@ -299,4 +333,3 @@ else:
             visibility_score_sum.drop('Traffic_Score_Percentage', axis=1, inplace=True)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_five(visibility_score_sum), unsafe_allow_html=True)
-
