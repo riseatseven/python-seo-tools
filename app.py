@@ -145,7 +145,6 @@ else:
     st.sidebar.markdown("### Which tool do you need?")
     select = st.sidebar.selectbox('Choose tool', ['Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'SERP top performer analysis'], key='1')
     st.text("")
-
     if select =='Forecasting tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
         forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
