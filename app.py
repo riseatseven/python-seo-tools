@@ -18,12 +18,12 @@ import datetime
 from datetime import date
 import time
 import argparse
-pytrends = TrendReq(proxies=[PROXY], retries=2, backoff_factor=0.1, requests_args={'verify':False})
+pytrends = TrendReq(proxies=[st.secrets["PROXY"]], retries=2, backoff_factor=0.1, requests_args={'verify':False})
 
 
 if 'password' not in st.session_state:
     password = st.text_input('Enter password', value='', type='password')
-    if not password==PASSWORD:
+    if not password==st.secrets["PASSWORD"]:
         st.session_state.password = False
 
 else:
