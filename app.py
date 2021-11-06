@@ -10,10 +10,20 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 from prophet import Prophet
+from pytrends.request import TrendReq
+import requests
+import random
+import csv
+import datetime
+from datetime import date
+import time
+import argparse
+pytrends = TrendReq(proxies=[PROXY,], retries=2, backoff_factor=0.1, requests_args={'verify':False})
+
 
 if 'password' not in st.session_state:
     password = st.text_input('Enter password', value='', type='password')
-    if not password=='R1s3Up!':
+    if not password==PASSWORD:
         st.session_state.password = False
 
 else:
@@ -143,20 +153,53 @@ else:
     st.sidebar.title("Available tools")
     st.text("")
     st.sidebar.markdown("### Which tool do you need?")
-    select = st.sidebar.selectbox('Choose tool', ['Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'SERP top performer analysis'], key='1')
+    select = st.sidebar.selectbox('Choose tool', ['Bulk Google Trends tool', 'Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'SERP top performer analysis'], key='1')
     st.text("")
+    if select =='Bulk Google Trends tool':
+        st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Bulk Google Trends Tool</strong></h2>", unsafe_allow_html=True)
+        trends_file = st.file_uploader("Choose a CSV file", type='csv', key='8')
+        if trends_file is not None:
+            st.write("Getting trends data...")
+            f = pd.read_csv(trends_file)
+            finaldff = pd.DataFrame()
+            for index, row in f.iterrows():
+                    kw_list = row
+                    name = kw_list[0]
+                    try:
+                        pytrends.build_payload(kw_list, cat=0, timeframe='today 5-y', geo='GB', gprop='')
+                        df = pytrends.interest_over_time()
+                        time.sleep(5  + random.random())
+                        try:
+                            finaldff[name] = df[name]
+                        except KeyError:
+                            finaldff[name] = 'skipped'
+                    except requests.exceptions.Timeout:
+                        st.write("Timeout occured")
+                    except requests.exceptions.ConnectionError:
+                        st.write("Connection error")
+            trends = finaldff.head(50)
+            st.write(trends)
     if select =='Forecasting tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
-        st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template:</strong></p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template, keeping the column headings exactly as they are:</strong></p>", unsafe_allow_html=True)
         st.markdown(get_table_download_link_six(data3), unsafe_allow_html=True)
-        st.markdown("<p style='font-weight:normal'>Now upload the populated file to get the forecast:</p>", unsafe_allow_html=True)
+        frequency_input = st.selectbox('What is the frequency of your data?', ['Daily', 'Weekly', 'Monthly'], key='8')
+        if frequency_input == 'Daily':
+            frequency_input = 'D'
+        if frequency_input == 'Weekly':
+            frequency_input = 'W'
+        if frequency_input == 'Monthly':
+            frequency_input = 'M'
+        period_input = st.text_input('How many periods into the future to do you want to forecast?', 365)
+        period_input = int(period_input)
+        st.markdown("<p style='font-weight:normal'><strong>Now upload the populated file to get the forecast:</strong></p>", unsafe_allow_html=True)
         forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
         if forecast_file is not None:
             st.write("Forecasting...")
             df = pd.read_csv(forecast_file)
             m = Prophet()
             m.fit(df)
-            future = m.make_future_dataframe(periods=365)
+            future = m.make_future_dataframe(periods=period_input, freq=frequency_input)
             future.tail()
             forecast = m.predict(future)
             forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail()
