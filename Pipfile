@@ -24,6 +24,7 @@ umap-learn = "*"
 apriori = "*"
 pystan = "==2.19.1.1"
 prophet = "*"
+pytrends = "*"
 
 [requires]
 python_version = "3.8"
