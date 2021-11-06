@@ -18,7 +18,7 @@ import datetime
 from datetime import date
 import time
 import argparse
-pytrends = TrendReq(proxies=[PROXY,], retries=2, backoff_factor=0.1, requests_args={'verify':False})
+pytrends = TrendReq(proxies=[PROXY], retries=2, backoff_factor=0.1, requests_args={'verify':False})
 
 
 if 'password' not in st.session_state:
