@@ -210,11 +210,11 @@ else:
             tabletosend = tabletosend.tail(3)
             tabletosend = tabletosend.transpose()
             st.write(tabletosend)
-            finaldff4 = finaldff4.transpose()
+            finaldff3 = finaldff3.transpose()
             counter = 1
-            for column in finaldff4:
+            for column in finaldff3:
                 counter_file = str(counter)
-                fig = px.line(finaldff4, x=finaldff4.index, y=finaldff4[column],  title=column)
+                fig = px.line(finaldff3, x=finaldff3.index, y=finaldff3[column],  title=column)
                 counter = counter + 1
                 st.plotly_chart(fig)
     if select =='Forecasting tool':
