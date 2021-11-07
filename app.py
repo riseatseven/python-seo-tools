@@ -177,8 +177,46 @@ else:
                         st.write("Timeout occured")
                     except requests.exceptions.ConnectionError:
                         st.write("Connection error")
-            trends = finaldff.head(50)
-            st.write(trends)
+            testdf = finaldff[256:].replace(0, 'skipped')
+            finaldff2 = finaldff
+            finaldff2 = finaldff2.append(testdf)
+            finaldff2 = finaldff2.loc[:,(finaldff2!='skipped').all()]
+            #finaldff2 = finaldff2.drop(['Query'], axis=1)
+            finaldff3 = finaldff2[207:260]
+            finaldff3 = finaldff3.transpose()
+            columns = len(finaldff3.columns)
+            last_column = columns - 1
+            second_last_column = columns - 2
+            third_last_column = columns - 3
+            fourth_last_column = columns - 4
+            fifth_last_column = columns - 5
+            sixth_last_column = columns - 6
+            seventh_last_column = columns - 7
+            eighth_last_column = columns - 8
+            ninth_last_column = columns - 9
+            tenth_last_column = columns - 10
+            finaldff3['last_threeweekavg'] = (finaldff3.iloc[:, last_column] + finaldff3.iloc[:, second_last_column] + finaldff3.iloc[:, third_last_column])/3
+            finaldff3['first_threeweekavg'] = (finaldff3.iloc[:, 1] + finaldff3.iloc[:, 2] + finaldff3.iloc[:, 3]+ + finaldff3.iloc[:, 4] + + finaldff3.iloc[:, 5])/5
+            finaldff3['score'] = finaldff3['last_threeweekavg'] - finaldff3['first_threeweekavg'] + finaldff3.iloc[:, last_column]
+            finaldff3 = finaldff3.sort_values(by=['score'], ascending=False)
+            finaldff4 = finaldff3.drop(['last_threeweekavg'], axis=1)
+            finaldff4 = finaldff4.drop(['first_threeweekavg'], axis=1)
+            finaldff4 = finaldff4.drop(['score'], axis=1)
+            tabletosend = finaldff4
+            tabletosend['Week on Week % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, second_last_column])*100)-100).round(0).astype(str) + '%'
+            tabletosend['Year on Year % Increase'] =(((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, 1])*100)-100).round(0).astype(str) + '%'.strip("0")
+            tabletosend['Month on Month % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, fifth_last_column])*100)-100).round(0).astype(str) + '%'.strip("0")
+            tabletosend = tabletosend.transpose()
+            tabletosend = tabletosend.tail(3)
+            tabletosend = tabletosend.transpose()
+            st.write(tabletosend)
+            finaldff4 = finaldff4.transpose()
+            counter = 1
+            for column in finaldff4:
+                counter_file = str(counter)
+                fig = px.line(finaldff4, x=finaldff4.index, y=finaldff4[column],  title=column)
+                counter = counter + 1
+                st.plotly_chart(fig)
     if select =='Forecasting tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template, keeping the column headings exactly as they are:</strong></p>", unsafe_allow_html=True)
