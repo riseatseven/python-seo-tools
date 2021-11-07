@@ -196,7 +196,7 @@ else:
             ninth_last_column = columns - 9
             tenth_last_column = columns - 10
             finaldff3['last_threeweekavg'] = (finaldff3.iloc[:, last_column] + finaldff3.iloc[:, second_last_column] + finaldff3.iloc[:, third_last_column])/3
-            finaldff3['first_threeweekavg'] = (finaldff3.iloc[:, 1] + finaldff3.iloc[:, 2] + finaldff3.iloc[:, 3]+ + finaldff3.iloc[:, 4] + + finaldff3.iloc[:, 5])/5
+            finaldff3['first_threeweekavg'] = (finaldff3.iloc[:, 0] + finaldff3.iloc[:, 1] + finaldff3.iloc[:, 2]+ + finaldff3.iloc[:, 4] + + finaldff3.iloc[:, 5])/5
             finaldff3['score'] = finaldff3['last_threeweekavg'] - finaldff3['first_threeweekavg'] + finaldff3.iloc[:, last_column]
             finaldff3 = finaldff3.sort_values(by=['score'], ascending=False)
             finaldff4 = finaldff3.drop(['last_threeweekavg'], axis=1)
@@ -204,7 +204,7 @@ else:
             finaldff4 = finaldff4.drop(['score'], axis=1)
             tabletosend = finaldff4
             tabletosend['Week on Week % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, second_last_column])*100)-100).round(0).astype(str) + '%'
-            tabletosend['Year on Year % Increase'] =(((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, 1])*100)-100).round(0).astype(str) + '%'.strip("0")
+            tabletosend['Year on Year % Increase'] =(((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, 0])*100)-100).round(0).astype(str) + '%'.strip("0")
             tabletosend['Month on Month % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, fifth_last_column])*100)-100).round(0).astype(str) + '%'.strip("0")
             tabletosend = tabletosend.transpose()
             tabletosend = tabletosend.tail(3)
