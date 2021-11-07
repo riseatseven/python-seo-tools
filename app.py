@@ -211,7 +211,6 @@ else:
             tabletosend = tabletosend.transpose()
             st.write(tabletosend)
             finaldff4 = finaldff4.transpose()
-            finaldff4 = finaldff4.head(20)
             counter = 1
             for column in finaldff4:
                 counter_file = str(counter)
