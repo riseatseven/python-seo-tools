@@ -160,7 +160,7 @@ else:
         trends_file = st.file_uploader("Choose a CSV file", type='csv', key='8')
         if trends_file is not None:
             st.write("Getting trends data...")
-            f = pd.read_csv(trends_file)
+            f = pd.read_csv(trends_file, header=None)
             finaldff = pd.DataFrame()
             for index, row in f.iterrows():
                     kw_list = row
