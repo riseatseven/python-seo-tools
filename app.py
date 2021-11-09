@@ -309,7 +309,7 @@ else:
             matches = df1.head(50)
             st.write(matches)
             st.markdown('### Download the full dataset:')
-            st.markdown(get_table_download_link_two(matches), unsafe_allow_html=True)
+            st.markdown(get_table_download_link_two(df1), unsafe_allow_html=True)
     if select =='Keyword categoriser':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>This tool uses <strong>counts of keywords</strong> to quickly find common themes from a list of search queries. It uses <a href='https://github.com/jroakes/querycat'>Querycat from JR Oakes.</a></p>", unsafe_allow_html=True)
