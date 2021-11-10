@@ -235,7 +235,7 @@ else:
         if forecast_file is not None:
             st.write("Forecasting...")
             df = pd.read_csv(forecast_file)
-            df['ds] = pd.to_datetime(df['ds'])
+            df['ds'] = pd.to_datetime(df['ds'])
             m = Prophet()
             m.fit(df)
             future = m.make_future_dataframe(periods=period_input, freq=frequency_input)
