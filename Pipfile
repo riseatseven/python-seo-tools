@@ -25,6 +25,8 @@ apriori = "*"
 pystan = "==2.19.1.1"
 prophet = "*"
 pytrends = "*"
+fasttext = "==0.9.2"
+gensim = "==3.8.3"
 
 [requires]
 python_version = "3.8"
