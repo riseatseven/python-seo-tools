@@ -353,7 +353,7 @@ else:
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Text Classifier</strong></h2>", unsafe_allow_html=True)
         epoch_input = st.text_input("How many epochs do you want to train with?", 100)
         epoch_input = int(epoch_input)
-        ngram_input = st.text_input("How many ngrams do you want to us?", 2)
+        ngram_input = st.text_input("How many ngrams do you want to use?", 2)
         ngram_input = int(ngram_input)
         dataset = st.file_uploader("Choose a CSV file", type='csv', key='8')
         if dataset is not None:
