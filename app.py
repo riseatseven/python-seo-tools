@@ -350,8 +350,11 @@ else:
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
     if select =='Text classifier':
+        st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Text Classifier</strong></h2>", unsafe_allow_html=True)
         epoch_input = st.text_input("How many epochs do you want to train with?", 100)
         epoch_input = int(epoch_input)
+        ngram_input = st.text_input("How many ngrams do you want to us?", 2)
+        ngram_input = int(ngram_input)
         dataset = st.file_uploader("Choose a CSV file", type='csv', key='8')
         if dataset is not None:
             # NLP Preprocess
@@ -377,7 +380,7 @@ else:
                                           quoting = csv.QUOTE_NONE,
                                           quotechar = "",
                                           escapechar = " ")
-            model = fasttext.train_supervised('train.txt', epoch=epoch_input, wordNgrams = 3)
+            model = fasttext.train_supervised('train.txt', epoch=epoch_input, wordNgrams = ngram_input)
             st.write("Model is trained")
             test_results = model.test('test.txt')
             st.write("The test results are:")
