@@ -20,6 +20,8 @@ import time
 import argparse
 #pytrends = TrendReq(proxies=[st.secrets["PROXY"]], retries=5, backoff_factor=5, requests_args={'verify':False})
 pytrends = TrendReq()
+import fasttext
+from gensim.utils import simple_preprocess
 
 if 'password' not in st.session_state:
     password = st.text_input('Enter password', value='', type='password')
@@ -153,7 +155,7 @@ else:
     st.sidebar.title("Available tools")
     st.text("")
     st.sidebar.markdown("### Which tool do you need?")
-    select = st.sidebar.selectbox('Choose tool', ['Bulk Google Trends tool', 'Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'SERP top performer analysis'], key='1')
+    select = st.sidebar.selectbox('Choose tool', ['Bulk Google Trends tool', 'Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'Text classifier', 'SERP top performer analysis'], key='1')
     st.text("")
     if select =='Bulk Google Trends tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Bulk Google Trends Tool</strong></h2>", unsafe_allow_html=True)
@@ -311,7 +313,7 @@ else:
             st.write(matches)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_two(df1), unsafe_allow_html=True)
-    if select =='Keyword categoriser':
+    if select =='Text categoriser':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>This tool uses <strong>counts of keywords</strong> to quickly find common themes from a list of search queries. It uses <a href='https://github.com/jroakes/querycat'>Querycat from JR Oakes.</a></p>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template - putting your list into the 'Keywords' column:</strong></p>", unsafe_allow_html=True)
@@ -332,6 +334,37 @@ else:
             st.write(categories)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
+        if select =='Keyword classifier':
+        dataset = st.file_uploader("Choose a CSV file", type='csv', key='8')
+        if dataset is not None:
+            # NLP Preprocess
+            st.write("Training...")
+            dataset = pd.read_csv(dataset)
+            dataset.iloc[:, 0] = dataset.iloc[:, 0].apply(lambda x: ' '.join(simple_preprocess(x)))
+            # Prefixing each row of the category column with '__label__'
+            dataset.iloc[:, 1] = dataset.iloc[:, 1].apply(lambda x: '__label__' + x)
+            dataset[['category', 'Keywords']].to_csv('train.txt',
+                                          index = False,
+                                          sep = ' ',
+                                          header = None,
+                                          quoting = csv.QUOTE_NONE,
+                                          quotechar = "",
+                                          escapechar = " ")
+            model = fasttext.train_supervised('train.txt', epoch=200)
+            st.write("Model is trained")
+        classify = st.file_uploader("Choose a CSV file", type='csv', key='9')
+        if classify is not None:
+            st.write("Classifying...")
+            classify = pd.read_csv(classify)
+            def prediction(category):
+                '''Make text lowercase, remove text in square brackets, remove punctuation and remove words containing numbers.'''
+                predict = model.predict(category)
+                return predict
+            round1 = lambda x: prediction(x)
+            #Apply the function and create a new column
+            classify['Predictions'] = classify.Keywords.apply(round1)
+            st.markdown('### Download the full dataset:')
+            st.markdown(get_table_download_link_eight(classify), unsafe_allow_html=True)
     if select =='SERP top performer analysis':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>SERP Top Performer Analysis</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>Upload the <strong>SERPs Data</strong> report from <strong>SEOMonitor</strong> here:</p>", unsafe_allow_html=True)
