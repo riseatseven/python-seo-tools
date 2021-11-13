@@ -148,14 +148,14 @@ else:
         return href
     
     def get_table_download_link_eight(df):
-    """Generates a link allowing the data in a given panda dataframe to be downloaded
-    in:  dataframe
-    out: href string
-    """
-    csv = df.to_csv(index=True)
-    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-    href = f'<a href="data:file/csv;base64,{b64}" download="classified-queries.csv">Download classified queries</a>'
-    return href
+        """Generates a link allowing the data in a given panda dataframe to be downloaded
+        in:  dataframe
+        out: href string
+        """
+        csv = df.to_csv(index=True)
+        b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+        href = f'<a href="data:file/csv;base64,{b64}" download="classified-queries.csv">Download classified queries</a>'
+        return href
 
     with open("style.css") as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
