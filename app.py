@@ -23,6 +23,11 @@ pytrends = TrendReq()
 import fasttext
 from gensim.utils import simple_preprocess
 
+import nltk
+from nltk.corpus import stopwords
+import re
+import string
+
 if 'password' not in st.session_state:
     password = st.text_input('Enter password', value='', type='password')
     if not password==st.secrets["PASSWORD"]:
@@ -345,11 +350,16 @@ else:
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
     if select =='Text classifier':
+        epoch_input = st.text_input("How many epochs do you want to train with?", 100)
+        epoch_input = int(epoch_input)
         dataset = st.file_uploader("Choose a CSV file", type='csv', key='8')
         if dataset is not None:
             # NLP Preprocess
             st.write("Training...")
             dataset = pd.read_csv(dataset)
+            stop = stopwords.words('english')
+            #Apply the removal of the stopwords to the newly added cleaned reviews column
+            dataset['Keywords'] = dataset['Keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
             dataset.iloc[:, 0] = dataset.iloc[:, 0].apply(lambda x: ' '.join(simple_preprocess(x)))
             # Prefixing each row of the category column with '__label__'
             dataset.iloc[:, 1] = dataset.iloc[:, 1].apply(lambda x: '__label__' + x)
@@ -360,19 +370,33 @@ else:
                                           quoting = csv.QUOTE_NONE,
                                           quotechar = "",
                                           escapechar = " ")
-            model = fasttext.train_supervised('train.txt', epoch=200)
+            dataset[['category', 'Keywords']].to_csv('test.txt',
+                                          index = False,
+                                          sep = ' ',
+                                          header = None,
+                                          quoting = csv.QUOTE_NONE,
+                                          quotechar = "",
+                                          escapechar = " ")
+            model = fasttext.train_supervised('train.txt', epoch=epoch_input, wordNgrams = 3)
             st.write("Model is trained")
+            test_results = model.test('test.txt')
+            st.write("The test results are:")
+            st.write(test_results)
         classify = st.file_uploader("Choose a CSV file", type='csv', key='9')
         if classify is not None:
             st.write("Classifying...")
             classify = pd.read_csv(classify)
+            #stop = stopwords.words('english')
+            #Apply the removal of the stopwords to the newly added cleaned reviews column
+            classify['Processed'] = classify['Keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+            classify['Processed']  = classify['Processed'].apply(lambda x: ' '.join(simple_preprocess(x)))
             def prediction(category):
                 '''Make text lowercase, remove text in square brackets, remove punctuation and remove words containing numbers.'''
                 predict = model.predict(category)
                 return predict
             round1 = lambda x: prediction(x)
             #Apply the function and create a new column
-            classify['Predictions'] = classify.Keywords.apply(round1)
+            classify['Predictions'] = classify.Processed.apply(round1)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_eight(classify), unsafe_allow_html=True)
     if select =='SERP top performer analysis':
