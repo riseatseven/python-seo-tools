@@ -351,6 +351,8 @@ else:
             st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
     if select =='Text classifier':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Text Classifier</strong></h2>", unsafe_allow_html=True)
+        st.markdown('### 1. Train your model:')
+        st.markdown("<p style='font-weight:normal'>Upload a file with the column headings <strong>'Keywords'</strong> and <strong>'Categories'</strong>.</p>", unsafe_allow_html=True)        
         epoch_input = st.text_input("How many epochs do you want to train with?", 100)
         epoch_input = int(epoch_input)
         ngram_input = st.text_input("How many ngrams do you want to use?", 2)
@@ -385,6 +387,8 @@ else:
             test_results = model.test('test.txt')
             st.write("The test results are:")
             st.write(test_results)
+        st.markdown('### 2. Classify your queries:')
+        st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'Keywords'</strong>.</p>", unsafe_allow_html=True)  
         classify = st.file_uploader("Choose a CSV file", type='csv', key='9')
         if classify is not None:
             st.write("Classifying...")
