@@ -400,6 +400,10 @@ else:
             round1 = lambda x: prediction(x)
             #Apply the function and create a new column
             classify['Predictions'] = classify.Processed.apply(round1)
+            classify['Predictions'] = classify['Predictions'].astype(str)
+            classify['Predictions'] = classify['Predictions'].replace(regex={r'\(\(\'__label__': ''})
+            classify['Predictions'] = classify['Predictions'].replace(regex={r'\'.*': ''})
+            classify.drop(['Processed'], axis=1, inplace=True)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_eight(classify), unsafe_allow_html=True)
     if select =='SERP top performer analysis':
