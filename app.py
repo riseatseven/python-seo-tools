@@ -382,7 +382,7 @@ else:
             df = querycat.pd.read_csv(keyword_file)
             catz = querycat.Categorize(df, 'Keywords', min_support=user_input,  alg='apriori')
             catz.df.drop('match_queries', axis=1, inplace=True)
-            st.markdown('### Here are (up to) the first 50 keywords and the category for each:')
+            st.markdown('### Here are the top 50 categories and the count of queries included in each:')
             st.write("")
             categories = catz.counts.head(50)
             st.write(categories)
