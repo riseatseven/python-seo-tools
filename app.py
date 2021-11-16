@@ -228,8 +228,8 @@ else:
             finaldff4 = finaldff4.drop(['score'], axis=1)
             tabletosend = finaldff4
             tabletosend['Week on Week % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, second_last_column])*100)-100).round(0).astype(str) + '%'
-            tabletosend['Month on Month % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, fifth_last_column])*100)-100).round(0).astype(str) + '%'.strip("0")
-            tabletosend['Year on Year % Increase'] =(((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, 0])*100)-100).round(0).astype(str) + '%'.strip("0")
+            tabletosend['Month on Month % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, fifth_last_column])*100)-100).round(0).astype(str) + '%'
+            tabletosend['Year on Year % Increase'] =(((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, 0])*100)-100).round(0).astype(str) + '%'
             tabletosend = tabletosend.transpose()
             tabletosend = tabletosend.tail(3)
             tabletosend = tabletosend.transpose()
