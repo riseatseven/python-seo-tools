@@ -384,7 +384,7 @@ else:
             catz.df.drop('match_queries', axis=1, inplace=True)
             st.markdown('### Here are (up to) the first 50 keywords and the category for each:')
             st.write("")
-            categories = catz.df.head(50)
+            categories = catz.counts.head(50)
             st.write(categories)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
