@@ -174,6 +174,13 @@ else:
     st.text("")
     if select =='Bulk Google Trends tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Bulk Google Trends Tool</strong></h2>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>1. Make a list of phrases you want to check in Google Sheets. <strong>Please stick to 20 phrases each day</strong>.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>2. Download the sheet as a <strong>.csv file</strong>.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>3. Choose to get trends from the <strong>UK or the US</strong>:</p>", unsafe_allow_html=True)
+        country_input = st.selectbox('Where do you want to get trends from?', ['UK', 'US'], key='12')
+        if country_input == 'UK':
+            country_input = 'GB'
+        st.markdown("<p style='font-weight:normal'>4. <strong>Drop the file here:</strong></p>", unsafe_allow_html=True)
         trends_file = st.file_uploader("Choose a CSV file", type='csv', key='8')
         if trends_file is not None:
             st.write("Getting trends data...")
@@ -183,7 +190,7 @@ else:
                     kw_list = row
                     name = kw_list[0]
                     try:
-                        pytrends.build_payload(kw_list, cat=0, timeframe='today 5-y', geo='GB', gprop='')
+                        pytrends.build_payload(kw_list, cat=0, timeframe='today 5-y', geo=country_input, gprop='')
                         df = pytrends.interest_over_time()
                         time.sleep(5  + random.random())
                         try:
@@ -221,8 +228,8 @@ else:
             finaldff4 = finaldff4.drop(['score'], axis=1)
             tabletosend = finaldff4
             tabletosend['Week on Week % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, second_last_column])*100)-100).round(0).astype(str) + '%'
-            tabletosend['Year on Year % Increase'] =(((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, 0])*100)-100).round(0).astype(str) + '%'.strip("0")
             tabletosend['Month on Month % Increase'] = (((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, fifth_last_column])*100)-100).round(0).astype(str) + '%'.strip("0")
+            tabletosend['Year on Year % Increase'] =(((finaldff3.iloc[:, last_column]/finaldff3.iloc[:, 0])*100)-100).round(0).astype(str) + '%'.strip("0")
             tabletosend = tabletosend.transpose()
             tabletosend = tabletosend.tail(3)
             tabletosend = tabletosend.transpose()
@@ -230,8 +237,40 @@ else:
             finaldff3 = finaldff3.transpose()
             counter = 1
             for column in finaldff3:
-                counter_file = str(counter)
-                fig = px.line(finaldff3, x=finaldff3.index, y=finaldff3[column],  title=column)
+                fig = go.Figure()
+
+                fig.update_layout(
+                    title={
+                    'text': column,
+                    'y':0.9,
+                    'x':0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top'},
+                    xaxis_title="Week",
+                    yaxis_title="Google Trend Score",
+                    xaxis=dict(
+                    showline=False,
+                    showgrid=False,
+                    showticklabels=True,
+                    linecolor='rgb(204, 204, 204)',
+                    linewidth=2,
+                    #ticks='outside',
+                    tickfont=dict(
+                    family='Interval',
+                    size=14,
+                    #color='rgb(82, 82, 82)',
+                    ),
+                    ),
+                    yaxis=dict(
+                    showgrid=False,
+                    zeroline=False,
+                    showline=False,
+                    showticklabels=True,
+                    ),
+                    showlegend=False,
+                    #plot_bgcolor='white'
+                    )
+                fig.add_trace(go.Scatter(x=finaldff3.index, y=finaldff3[column], name=column, line=dict(color='hotpink', width=4)))
                 counter = counter + 1
                 st.plotly_chart(fig)
     if select =='Forecasting tool':
