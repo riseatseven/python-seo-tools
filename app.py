@@ -453,7 +453,11 @@ else:
             st.markdown(get_table_download_link_eight(classify), unsafe_allow_html=True)
     if select =='SERP top performer analysis':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>SERP Top Performer Analysis</strong></h2>", unsafe_allow_html=True)
-        st.markdown("<p style='font-weight:normal'>Upload the <strong>SERPs Data</strong> report from <strong>SEOMonitor</strong> here:</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>This tool converts an <strong>SEOmonitor report</strong> into a graph showing the <strong>top performers</strong> for a keyword set.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>1. Choose if you want <strong>estimated organic traffic</strong>, <strong>visibility score</strong> or <strong>both (tick both boxes)</strong>:</p>", unsafe_allow_html=True)
+        traffic = st.checkbox("Estimated organic search traffic")
+        visibility = st.checkbox("Visibility score")
+        st.markdown("<p style='font-weight:normal'>2. Upload the <strong>SERPs Data</strong> report from <strong>SEOMonitor</strong> here:</p>", unsafe_allow_html=True)
         visibility_file = st.file_uploader("Choose a CSV file", type='csv', key='5')
         if visibility_file is not None:
             st.write("Finding top performers...")
@@ -497,10 +501,12 @@ else:
             visibility_score_sum['Traffic Score Percentage'] = visibility_score_sum['Traffic_Score_Percentage'].astype(int)
             final_df = visibility_score_sum.head(5)
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=final_df.index, y=final_df['Traffic Score Percentage'], name='Estimated Traffic Score',
+            if traffic:
+                fig.add_trace(go.Bar(x=final_df.index, y=final_df['Traffic Score Percentage'], name='Estimated Traffic Score',
                             marker_color='#ff0bac', text=final_df['Traffic Score Percentage']
                             ))
-            fig.add_trace(go.Bar(x=final_df.index, y=final_df['Visibility Score Percentage'], name='Visibility Score',
+            if visibility:
+                fig.add_trace(go.Bar(x=final_df.index, y=final_df['Visibility Score Percentage'], name='Visibility Score',
                             marker_color='#a13bff', text=final_df['Visibility Score Percentage']
                             ))
             fig.update_traces(texttemplate='%{text:.2s}', textposition='inside')
