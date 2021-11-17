@@ -176,7 +176,7 @@ else:
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Bulk Google Trends Tool</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>1. Make a list of phrases you want to check in Google Sheets. <strong>Please stick to 20 phrases each day</strong>.</p>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>2. Download the sheet as a <strong>.csv file</strong>.</p>", unsafe_allow_html=True)
-        st.markdown("<p style='font-weight:normal'>3. Choose to get trends from the <strong>UK or the US</strong>:</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>3. Choose to get trends from the <strong>UK, US or Worldwide</strong>:</p>", unsafe_allow_html=True)
         country_input = st.selectbox('Where do you want to get trends from?', ['UK', 'US', 'Worldwide'], key='12')
         if country_input == 'UK':
             country_input = 'GB'
