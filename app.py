@@ -177,9 +177,11 @@ else:
         st.markdown("<p style='font-weight:normal'>1. Make a list of phrases you want to check in Google Sheets. <strong>Please stick to 20 phrases each day</strong>.</p>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>2. Download the sheet as a <strong>.csv file</strong>.</p>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>3. Choose to get trends from the <strong>UK or the US</strong>:</p>", unsafe_allow_html=True)
-        country_input = st.selectbox('Where do you want to get trends from?', ['UK', 'US'], key='12')
+        country_input = st.selectbox('Where do you want to get trends from?', ['UK', 'US', 'Worldwide'], key='12')
         if country_input == 'UK':
             country_input = 'GB'
+        if country_input == 'Worldwide':
+            country_input = ''
         st.markdown("<p style='font-weight:normal'>4. <strong>Drop the file here:</strong></p>", unsafe_allow_html=True)
         trends_file = st.file_uploader("Choose a CSV file", type='csv', key='8')
         if trends_file is not None:
