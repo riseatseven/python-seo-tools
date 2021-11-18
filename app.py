@@ -405,10 +405,11 @@ else:
             dataset = pd.read_csv(dataset)
             stop = stopwords.words('english')
             #Apply the removal of the stopwords to the newly added cleaned reviews column
-            dataset['Keywords'] = dataset['Keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+            dataset.iloc[:, 0] = dataset.iloc[:, 0].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
             dataset.iloc[:, 0] = dataset.iloc[:, 0].apply(lambda x: ' '.join(simple_preprocess(x)))
             # Prefixing each row of the category column with '__label__'
-            dataset.iloc[:, 1] = dataset.iloc[:, 1].apply(lambda x: '__label__' + x)
+            #dataset.iloc[:, 1] = dataset.iloc[:, 1].apply(lambda x: '__label__' + x)
+            dataset['category'] = dataset['category'].apply(lambda x: '__label__' + x)
             dataset[['category', 'Keywords']].to_csv('train.txt',
                                           index = False,
                                           sep = ' ',
