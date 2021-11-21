@@ -393,7 +393,7 @@ else:
     if select =='Text classifier':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Text Classifier</strong></h2>", unsafe_allow_html=True)
         st.markdown('### 1. Train your model:')
-        st.markdown("<p style='font-weight:normal'>Upload a file with the column headings <strong>'Keywords'</strong> and <strong>'Categories'</strong>.</p>", unsafe_allow_html=True)        
+        st.markdown("<p style='font-weight:normal'>Upload a file with the column headings <strong>'keywords'</strong> and <strong>'category'</strong>.</p>", unsafe_allow_html=True)        
         epoch_input = st.text_input("How many epochs do you want to train with?", 100)
         epoch_input = int(epoch_input)
         ngram_input = st.text_input("How many ngrams do you want to use?", 2)
