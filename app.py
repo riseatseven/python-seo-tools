@@ -161,6 +161,11 @@ else:
         b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
         href = f'<a href="data:file/csv;base64,{b64}" download="classified-queries.csv">Download classified queries</a>'
         return href
+    
+    def download_model(model):
+        model.save_model('model.bin')
+        href = f'<a href="model.bin" download="model.bin">Download trained model</a>'
+        st.markdown(href, unsafe_allow_html=True)
 
     with open("style.css") as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
@@ -429,6 +434,7 @@ else:
             test_results = model.test('test.txt')
             st.write("The test results are:")
             st.write(test_results)
+            download_model(model)
         st.markdown('### 2. Classify your queries:')
         st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'Keywords'</strong>.</p>", unsafe_allow_html=True)  
         classify = st.file_uploader("Choose a CSV file", type='csv', key='9')
