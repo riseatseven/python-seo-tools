@@ -414,56 +414,74 @@ else:
             st.markdown(get_table_download_link_four(catz.df), unsafe_allow_html=True)
     if select =='Text classifier':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Text Classifier</strong></h2>", unsafe_allow_html=True)
-        st.markdown('### 1. Train your model:')
-        st.markdown("<p style='font-weight:normal'>Upload a file with the column headings <strong>'keywords'</strong> and <strong>'category'</strong>.</p>", unsafe_allow_html=True)        
-        epoch_input = st.text_input("How many epochs do you want to train with?", 100)
-        epoch_input = int(epoch_input)
-        ngram_input = st.text_input("How many ngrams do you want to use?", 2)
-        ngram_input = int(ngram_input)
-        dataset = st.file_uploader("Choose a CSV file", type='csv', key='8')
-        if dataset is not None:
-            # NLP Preprocess
-            st.write("Training...")
-            dataset = pd.read_csv(dataset)
-            stop = stopwords.words('english')
-            #Apply the removal of the stopwords to the newly added cleaned reviews column
-            dataset['keywords'] = dataset['keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
-            dataset['keywords'] = dataset['keywords'].apply(lambda x: ' '.join(simple_preprocess(x)))
-            # Prefixing each row of the category column with '__label__'
-            dataset['category'] = dataset['category'].apply(lambda x: '__label__' + x)
-            dataset[['category', 'keywords']].to_csv('train.txt',
-                                          index = False,
-                                          sep = ' ',
-                                          header = None,
-                                          quoting = csv.QUOTE_NONE,
-                                          quotechar = "",
-                                          escapechar = " ")
-            dataset[['category', 'keywords']].to_csv('test.txt',
-                                          index = False,
-                                          sep = ' ',
-                                          header = None,
-                                          quoting = csv.QUOTE_NONE,
-                                          quotechar = "",
-                                          escapechar = " ")
-            model = fasttext.train_supervised('train.txt', epoch=epoch_input, wordNgrams = ngram_input)
-            st.write("Model is trained")
-            test_results = model.test('test.txt')
-            st.write("The test results are:")
-            st.write(test_results)
-            model = get_model()
-            save_model(model, path="model.bin")
-            # Download saved trained model
-            with open("model.bin", "rb") as f:
-                btn = st.download_button(
-                    label="Download trained text classification model",
-                    data=f,
-                    file_name="fasttext_model.bin" # Any file name
-                 )
+        st.markdown('### 1. Do you already have a trained model?')
+        nope = st.checkbox("No")
+        yesss = st.checkbox("Yes")
+        if nope:
+            st.markdown('### Train your model:')
+            st.markdown("<p style='font-weight:normal'>Upload a file with the column headings <strong>'keywords'</strong> and <strong>'category'</strong>.</p>", unsafe_allow_html=True)
+            epoch_input = st.text_input("How many epochs do you want to train with?", 100)
+            epoch_input = int(epoch_input)
+            ngram_input = st.text_input("How many ngrams do you want to use?", 2)
+            ngram_input = int(ngram_input)
+            dataset = st.file_uploader("Choose a CSV file", type='csv', key='8')
+            if dataset is not None:
+                # NLP Preprocess
+                st.write("Training...")
+                dataset = pd.read_csv(dataset)
+                stop = stopwords.words('english')
+                #Apply the removal of the stopwords to the newly added cleaned reviews column
+                dataset['keywords'] = dataset['keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+                dataset['keywords'] = dataset['keywords'].apply(lambda x: ' '.join(simple_preprocess(x)))
+                # Prefixing each row of the category column with '__label__'
+                dataset['category'] = dataset['category'].apply(lambda x: '__label__' + x)
+                dataset[['category', 'keywords']].to_csv('train.txt',
+                                              index = False,
+                                              sep = ' ',
+                                              header = None,
+                                              quoting = csv.QUOTE_NONE,
+                                              quotechar = "",
+                                              escapechar = " ")
+                dataset[['category', 'keywords']].to_csv('test.txt',
+                                              index = False,
+                                              sep = ' ',
+                                              header = None,
+                                              quoting = csv.QUOTE_NONE,
+                                              quotechar = "",
+                                              escapechar = " ")
+                model = fasttext.train_supervised('train.txt', epoch=epoch_input, wordNgrams = ngram_input)
+                st.write("Model is trained")
+                test_results = model.test('test.txt')
+                st.write("The test results are:")
+                st.write(test_results)
+                model = get_model()
+                save_model(model, path="model.bin")
+                # Download saved trained model
+                with open("model.bin", "rb") as f:
+                    btn = st.download_button(
+                        label="Download trained text classification model",
+                        data=f,
+                        file_name="fasttext_model.bin" # Any file name
+                     )
+        if yesss:
+            st.markdown('### Upload your model:')
+            uploaded_model = st.file_uploader("Choose a model file", type='bin', key='12')
+            if uploaded_model is not None:
+                import os
+                def save_uploadedfile(uploadedfile):
+                    with open(os.path.join("tempDir",uploaded_model.name),"wb") as f:
+                        f.write(uploadedfile.getbuffer())
+                    return st.success("Saved File:{} to tempDir".format(uploadedfile.name))
+                file_details = {"FileName":uploaded_model.name,"FileType":uploaded_model.type}
+                save_uploadedfile(uploaded_model)
+                model = fasttext.load_model(os.path.join("tempDir", uploaded_model.name))
+                stop = stopwords.words('english')
         st.markdown('### 2. Classify your queries:')
-        st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'keywords'</strong>.</p>", unsafe_allow_html=True)  
+        st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'keywords'</strong>.</p>", unsafe_allow_html=True)
         classify = st.file_uploader("Choose a CSV file", type='csv', key='9')
         if classify is not None:
             st.write("Classifying...")
+            model = model
             classify = pd.read_csv(classify)
             #stop = stopwords.words('english')
             #Apply the removal of the stopwords to the newly added cleaned reviews column
@@ -476,9 +494,9 @@ else:
             round1 = lambda x: prediction(x)
             #Apply the function and create a new column
             classify['predictions'] = classify.Processed.apply(round1)
-            classify['predictions'] = classify['Predictions'].astype(str)
-            classify['predictions'] = classify['Predictions'].replace(regex={r'\(\(\'__label__': ''})
-            classify['predictions'] = classify['Predictions'].replace(regex={r'\'.*': ''})
+            classify['predictions'] = classify['predictions'].astype(str)
+            classify['predictions'] = classify['predictions'].replace(regex={r'\(\(\'__label__': ''})
+            classify['predictions'] = classify['predictions'].replace(regex={r'\'.*': ''})
             classify.drop(['Processed'], axis=1, inplace=True)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_eight(classify), unsafe_allow_html=True)
