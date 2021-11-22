@@ -161,6 +161,16 @@ else:
         b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
         href = f'<a href="data:file/csv;base64,{b64}" download="classified-queries.csv">Download classified queries</a>'
         return href
+    
+    # Cache trained model
+    @st.experimental_singleton
+    def get_model():
+        model = fasttext.train_supervised(input="train.text")
+        return model
+
+    # Save trained model to file
+    def save_model(model, path="model.bin"):
+        model.save_model(path)
 
     with open("style.css") as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
@@ -428,6 +438,15 @@ else:
             test_results = model.test('test.txt')
             st.write("The test results are:")
             st.write(test_results)
+            model = get_model()
+            save_model(model, path="model.bin")
+            # Download saved trained model
+            with open("model.bin", "rb") as f:
+                btn = st.download_button(
+                    label="Download trained text classification model",
+                    data=f,
+                    file_name="fasttext_model.bin" # Any file name
+                 )
         st.markdown('### 2. Classify your queries:')
         st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'keywords'</strong>.</p>", unsafe_allow_html=True)  
         classify = st.file_uploader("Choose a CSV file", type='csv', key='9')
