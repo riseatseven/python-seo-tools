@@ -469,7 +469,7 @@ else:
             if uploaded_model is not None:
                 import os
                 def save_uploadedfile(uploadedfile):
-                    with open(uploaded_model.name),"wb") as f:
+                    with open(uploaded_model.name,"wb") as f:
                         f.write(uploadedfile.getbuffer())
                     return st.success("Saved File:{} to tempDir".format(uploadedfile.name))
                 file_details = {"FileName":uploaded_model.name,"FileType":uploaded_model.type}
