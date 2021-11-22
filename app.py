@@ -474,7 +474,7 @@ else:
                     return st.success("Saved File:{} to tempDir".format(uploadedfile.name))
                 file_details = {"FileName":uploaded_model.name,"FileType":uploaded_model.type}
                 save_uploadedfile(uploaded_model)
-                model = fasttext.load_model(os.path.join("tempDir", uploaded_model.name))
+                model = fasttext.load_model(uploaded_model.name))
                 stop = stopwords.words('english')
         st.markdown('### 2. Classify your queries:')
         st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'keywords'</strong>.</p>", unsafe_allow_html=True)
