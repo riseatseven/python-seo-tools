@@ -165,7 +165,7 @@ else:
     # Cache trained model
     @st.experimental_singleton
     def get_model():
-        model = fasttext.train_supervised(input="train.text")
+        model = fasttext.train_supervised(input="train.txt")
         return model
 
     # Save trained model to file
