@@ -162,6 +162,16 @@ else:
         href = f'<a href="data:file/csv;base64,{b64}" download="classified-queries.csv">Download classified queries</a>'
         return href
     
+    def get_table_download_link_nine(df):
+        """Generates a link allowing the data in a given panda dataframe to be downloaded
+        in:  dataframe
+        out: href string
+        """
+        csv = df.to_csv(index=False)
+        b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+        href = f'<a href="data:file/csv;base64,{b64}" download="trend-data.csv">Download trend data</a>'
+        return href
+  
     # Cache trained model
     @st.experimental_singleton
     def get_model():
@@ -246,6 +256,8 @@ else:
             tabletosend = tabletosend.tail(3)
             tabletosend = tabletosend.transpose()
             st.write(tabletosend)
+            st.markdown('### Download the full dataset:')
+            st.markdown(get_table_download_link_nine(tabletosend), unsafe_allow_html=True)
             finaldff3 = finaldff3.transpose()
             counter = 1
             for column in finaldff3:
