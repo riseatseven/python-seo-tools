@@ -312,15 +312,15 @@ else:
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Search volume gatherer</strong></h2>", unsafe_allow_html=True)
         st.markdown('### 1. Which areas do you want to get volume in?')
         select = st.selectbox('Choose location', ['Top 10 UK cities', 'All 50 US states', 'My own list of locations'], key='13')
+        if select =='My own list of locations':
+            st.markdown("<p style='font-weight:normal'><strong>Upload your list of locations</strong></p>", unsafe_allow_html=True)
+            locations_file = st.file_uploader("Choose a CSV file", type='csv', key='15')
         st.markdown("### 2. Upload your list of queries with the column heading of 'keywords'")
         volumes_file = st.file_uploader("Choose a CSV file", type='csv', key='14')
         if select =='All 50 US states':
             locations_file = pd.read_csv('US-States.csv', header=None)
         if select == 'Top 10 UK cities':
             locations_file = pd.read_csv('UK-Cities.csv', header=None)
-        if select =='My own list of locations':
-            st.markdown("<p style='font-weight:normal'><strong>Upload your list of locations</strong></p>", unsafe_allow_html=True)
-            locations_file = st.file_uploader("Choose a CSV file", type='csv', key='15')
         if volumes_file is not None:
             volumes_file = pd.read_csv(volumes_file)
             df_list = volumes_file['keywords'].tolist()
