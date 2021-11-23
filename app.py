@@ -332,7 +332,8 @@ else:
                     location = int(location)
                     url = "https://api.keywordtool.io/v2/search/volume/google"
                     data = {
-                    "apikey": st.secrets["KEYWORDTOOL"],
+                    #"apikey": st.secrets["KEYWORDTOOL"],
+                    "apikey": '5da68d29ddb464fc46966fe9fc19f2a49d52854d',
                     "keyword":
                     df_list,
                     "metrics_location": [
