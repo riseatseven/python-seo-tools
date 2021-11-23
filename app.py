@@ -354,11 +354,23 @@ else:
                     data = response.json()
                     json_str = json.dumps(data)
                     resp = json.loads(json_str)
-                    final_frame = pd.DataFrame(columns=['keyword', 'volume', 'Location ID'])
+                    final_frame = pd.DataFrame(columns=['keyword', 'volume', 'Location ID', 'Month 1', 'Month 2','Month 3','Month 4','Month 5','Month 6','Month 7','Month 8','Month 9','Month 10','Month 11','Month 12'])
                     for i in df_list:
                         keyword = i
                         volume = resp['results'][keyword]['volume']
-                        table = {'keyword':keyword,'volume':[volume],'Location ID':[location]}
+                        month1 = resp['results'][keyword]['m1']
+                        month2 = resp['results'][keyword]['m2']
+                        month3 = resp['results'][keyword]['m3']
+                        month4 = resp['results'][keyword]['m4']
+                        month5 = resp['results'][keyword]['m5']
+                        month6 = resp['results'][keyword]['m6']
+                        month7 = resp['results'][keyword]['m7']
+                        month8 = resp['results'][keyword]['m8']
+                        month9 = resp['results'][keyword]['m9']
+                        month10 = resp['results'][keyword]['m10']
+                        month11 = resp['results'][keyword]['m11']
+                        month12 = resp['results'][keyword]['m12']
+                        table = {'keyword':keyword,'volume':[volume],'Location ID':[location], 'Month 1': month1, 'Month 2': month2, 'Month 3': month3, 'Month 4': month4, 'Month 5': month5, 'Month 6': month6, 'Month 7': month7, 'Month 8': month8, 'Month 9': month9, 'Month 10': month10, 'Month 11': month11, 'Month 12': month12}
                         dataframe = pd.DataFrame(table)
                         final_frame = final_frame.append(dataframe)
                         finalfinal_frame = finalfinal_frame.append(final_frame)
