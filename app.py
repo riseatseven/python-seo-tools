@@ -311,7 +311,7 @@ else:
     if select =='Search volume gatherer':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Search volume gatherer</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Which areas do you want to get volume in?</strong></p>", unsafe_allow_html=True)
-        select = st.selectbox('Choose location', ['My own list of locations', 'Top 10 UK cities', 'All 50 US states'], key='13')
+        select = st.selectbox('Choose location', ['Top 10 UK cities', 'All 50 US states', 'My own list of locations'], key='13')
         st.markdown("<p style='font-weight:normal'><strong>Upload your list of queries with the column heading of 'keywords':</strong></p>", unsafe_allow_html=True)
         volumes_file = st.file_uploader("Choose a CSV file", type='csv', key='14')
         if select =='All 50 US states':
@@ -332,8 +332,7 @@ else:
                     location = int(location)
                     url = "https://api.keywordtool.io/v2/search/volume/google"
                     data = {
-                    #"apikey": st.secrets["KEYWORDTOOL"],
-                    "apikey": '5da68d29ddb464fc46966fe9fc19f2a49d52854d',
+                    "apikey": st.secrets["KEYWORDTOOL"],
                     "keyword":
                     df_list,
                     "metrics_location": [
