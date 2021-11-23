@@ -321,11 +321,11 @@ else:
         if select =='My own list of locations':
             st.markdown("<p style='font-weight:normal'><strong>Upload your list of locations</strong></p>", unsafe_allow_html=True)
             locations_file = st.file_uploader("Choose a CSV file", type='csv', key='15')
-            locations_file = pd.read_csv(locations_file, header=None)
         if volumes_file is not None:
             volumes_file = pd.read_csv(volumes_file)
             df_list = volumes_file['keywords'].tolist()
             if locations_file is not None:
+                locations_file = pd.read_csv(locations_file, header=None)
                 finalfinal_frame = pd.DataFrame(columns=['keyword', 'volume', 'Location ID'])
                 for index, row in locations_file.iterrows():
                     location = row
