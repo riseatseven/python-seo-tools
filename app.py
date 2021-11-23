@@ -313,14 +313,14 @@ else:
         st.markdown("<p style='font-weight:normal'><strong>Which areas do you want to get volume in?</strong></p>", unsafe_allow_html=True)
         select = st.selectbox('Choose location', ['My own list of locations', 'Top 10 UK cities', 'All 50 US states'], key='13')
         st.markdown("<p style='font-weight:normal'><strong>Upload your list of queries with the column heading of 'keywords':</strong></p>", unsafe_allow_html=True)
-        volumes_file = st.file_uploader("Choose a CSV file", type='csv', key='13')
+        volumes_file = st.file_uploader("Choose a CSV file", type='csv', key='14')
         if select =='All 50 US states':
             locations_file = pd.read_csv('US-States.csv', header=None)
         if select == 'Top 10 UK cities':
             locations_file = pd.read_csv('UK-Cities.csv', header=None)
         if select =='My own list of locations':
             st.markdown("<p style='font-weight:normal'><strong>Upload your list of locations</strong></p>", unsafe_allow_html=True)
-            locations_file = st.file_uploader("Choose a CSV file", type='csv', key='14')
+            locations_file = st.file_uploader("Choose a CSV file", type='csv', key='15')
             locations_file = pd.read_csv(locations_file, header=None)
         if volumes_file is not None:
             volumes_file = pd.read_csv(volumes_file)
