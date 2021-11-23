@@ -320,7 +320,7 @@ else:
             locations_file = pd.read_csv('UK-Cities.csv', header=None)
         if select =='My own list of locations':
             st.markdown("<p style='font-weight:normal'><strong>Upload your list of locations</strong></p>", unsafe_allow_html=True)
-            locations_file = st.file_uploader("Choose a CSV file", type='csv', key='13')
+            locations_file = st.file_uploader("Choose a CSV file", type='csv', key='14')
             locations_file = pd.read_csv(locations_file, header=None)
         if volumes_file is not None:
             volumes_file = pd.read_csv(volumes_file)
