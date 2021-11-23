@@ -28,6 +28,8 @@ from nltk.corpus import stopwords
 import re
 import string
 
+import json
+
 if 'password' not in st.session_state:
     password = st.text_input('Enter password', value='', type='password')
     if not password==st.secrets["PASSWORD"]:
@@ -171,7 +173,17 @@ else:
         b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
         href = f'<a href="data:file/csv;base64,{b64}" download="trend-data.csv">Download trend data</a>'
         return href
-  
+
+    def get_table_download_link_ten(df):
+        """Generates a link allowing the data in a given panda dataframe to be downloaded
+        in:  dataframe
+        out: href string
+        """
+        csv = df.to_csv(index=True)
+        b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+        href = f'<a href="data:file/csv;base64,{b64}" download="trend-data.csv">Download volume data</a>'
+        return href
+
     # Cache trained model
     @st.experimental_singleton
     def get_model():
@@ -190,7 +202,7 @@ else:
     st.sidebar.title("Available tools")
     st.text("")
     st.sidebar.markdown("### Which tool do you need?")
-    select = st.sidebar.selectbox('Choose tool', ['Bulk Google Trends tool', 'Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'Text classifier', 'SERP top performer analysis'], key='1')
+    select = st.sidebar.selectbox('Choose tool', ['Bulk Google Trends tool', 'Search volume gatherer', 'Forecasting tool', 'Fuzzy matching tool', 'Keyword categoriser', 'Text classifier', 'SERP top performer analysis'], key='1')
     st.text("")
     if select =='Bulk Google Trends tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Bulk Google Trends Tool</strong></h2>", unsafe_allow_html=True)
@@ -262,7 +274,6 @@ else:
             counter = 1
             for column in finaldff3:
                 fig = go.Figure()
-
                 fig.update_layout(
                     title={
                     'text': column,
@@ -297,6 +308,67 @@ else:
                 fig.add_trace(go.Scatter(x=finaldff3.index, y=finaldff3[column], name=column, line=dict(color='hotpink', width=4)))
                 counter = counter + 1
                 st.plotly_chart(fig)
+    if select =='Search volume gatherer':
+        st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Search volume gatherer</strong></h2>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'><strong>Which areas do you want to get volume in?</strong></p>", unsafe_allow_html=True)
+        select = st.selectbox('Choose location', ['My own list of locations', 'Top 10 UK cities', 'All 50 US states'], key='13')
+        st.markdown("<p style='font-weight:normal'><strong>Upload your list of queries with the column heading of 'keywords':</strong></p>", unsafe_allow_html=True)
+        volumes_file = st.file_uploader("Choose a CSV file", type='csv', key='13')
+        if select =='All 50 US states':
+            locations_file = pd.read_csv('US-States.csv', header=None)
+        if select == 'Top 10 UK cities':
+            locations_file = pd.read_csv('UK-Cities.csv', header=None)
+        if select =='My own list of locations':
+            st.markdown("<p style='font-weight:normal'><strong>Upload your list of locations</strong></p>", unsafe_allow_html=True)
+            locations_file = st.file_uploader("Choose a CSV file", type='csv', key='13')
+            locations_file = pd.read_csv(locations_file, header=None)
+        if volumes_file is not None:
+            volumes_file = pd.read_csv(volumes_file)
+            df_list = volumes_file['keywords'].tolist()
+            if locations_file is not None:
+                finalfinal_frame = pd.DataFrame(columns=['keyword', 'volume', 'Location ID'])
+                for index, row in locations_file.iterrows():
+                    location = row
+                    location = int(location)
+                    url = "https://api.keywordtool.io/v2/search/volume/google"
+                    data = {
+                    "apikey": st.secrets["KEYWORDTOOL"],
+                    "keyword":
+                    df_list,
+                    "metrics_location": [
+                    location
+                    ],
+                    "metrics_language": [
+                    "en"
+                    ],
+                    "metrics_network": "googlesearchnetwork",
+                    "metrics_currency": "GBP",
+                    "output": "json"
+                    }
+                    response = requests.post(url, json = data)
+                    #print(response.text.encode('utf8'))
+                    def jprint(obj):
+                        # create a formatted string of the Python JSON object
+                        text = json.dumps(obj, sort_keys=True, indent=4)
+                        #data = jprint(response.json())
+                    data = response.json()
+                    json_str = json.dumps(data)
+                    resp = json.loads(json_str)
+                    final_frame = pd.DataFrame(columns=['keyword', 'volume', 'Location ID'])
+                    for i in df_list:
+                        keyword = i
+                        volume = resp['results'][keyword]['volume']
+                        table = {'keyword':keyword,'volume':[volume],'Location ID':[location]}
+                        dataframe = pd.DataFrame(table)
+                        final_frame = final_frame.append(dataframe)
+                        finalfinal_frame = finalfinal_frame.append(final_frame)
+            df_reference = pd.read_csv('all_locations_keywordtool.csv')
+            joined_df = pd.merge(finalfinal_frame,
+                     df_reference,
+                     on ='Location ID',
+                     how ='inner')
+            st.markdown('### Download the full dataset:')
+            st.markdown(get_table_download_link_ten(joined_df), unsafe_allow_html=True)
     if select =='Forecasting tool':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template, keeping the column headings exactly as they are:</strong></p>", unsafe_allow_html=True)
