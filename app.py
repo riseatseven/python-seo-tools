@@ -374,7 +374,7 @@ else:
                         table = {'keyword':keyword,'volume':[volume],'Location ID':[location], 'Month 1': month1, 'Month 2': month2, 'Month 3': month3, 'Month 4': month4, 'Month 5': month5, 'Month 6': month6, 'Month 7': month7, 'Month 8': month8, 'Month 9': month9, 'Month 10': month10, 'Month 11': month11, 'Month 12': month12}
                         dataframe = pd.DataFrame(table)
                         final_frame = final_frame.append(dataframe)
-                        finalfinal_frame = finalfinal_frame.append(final_frame)
+                    finalfinal_frame = finalfinal_frame.append(final_frame)
                     time.sleep(7  + random.random())
             df_reference = pd.read_csv('all_locations_keywordtool.csv')
             joined_df = pd.merge(finalfinal_frame,
