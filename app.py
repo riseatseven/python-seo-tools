@@ -522,7 +522,7 @@ else:
                 dataset['Keywords'] = dataset['Keywords'].apply(lambda x: ' '.join(simple_preprocess(x)))
                 # Prefixing each row of the category column with '__label__'
                 dataset['Category'] = dataset['Category'].apply(lambda x: '__label__' + x)
-                dataset1, dataset2 = np.split([int(.9*len(dataset)), int(.1*len(dataset))])
+                dataset1, dataset2 = np.split(df.sample(frac=1, random_state=42), [int(.9*len(dataset)), int(.2*len(dataset))])
                 dataset1[['Category', 'Keywords']].to_csv('train.txt',
                                               index = False,
                                               sep = ' ',
