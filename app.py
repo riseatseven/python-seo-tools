@@ -480,7 +480,7 @@ else:
     if select =='Keyword categoriser':
         st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Keyword Categoriser</strong></h2>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'>This tool uses <strong>counts of keywords</strong> to quickly find common themes from a list of search queries. It uses <a href='https://github.com/jroakes/querycat'>Querycat from JR Oakes.</a></p>", unsafe_allow_html=True)
-        st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template - putting your list into the 'keywords' column:</strong></p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template - putting your list into the 'Keywords' column:</strong></p>", unsafe_allow_html=True)
         st.markdown(get_table_download_link_three(data2), unsafe_allow_html=True)
         st.markdown("<p style='font-weight:normal'><strong>Then choose how many times you want a keyword to be mentioned before it becomes a category (test this with multiple options to find what works best).</strong></p>", unsafe_allow_html=True)
         user_input = st.text_input("How many mentions for a keyword before you want to count it as a category?", 3)
@@ -490,7 +490,7 @@ else:
         if keyword_file is not None:
             st.write("Categorising...")
             df = querycat.pd.read_csv(keyword_file)
-            catz = querycat.Categorize(df, 'keywords', min_support=user_input,  alg='apriori')
+            catz = querycat.Categorize(df, 'Keywords', min_support=user_input,  alg='apriori')
             catz.df.drop('match_queries', axis=1, inplace=True)
             st.markdown('### Here are the top 50 categories and the count of queries included in each:')
             st.write("")
@@ -505,7 +505,7 @@ else:
         yesss = st.checkbox("Yes")
         if nope:
             st.markdown('### Train your model:')
-            st.markdown("<p style='font-weight:normal'>Upload a file with the column headings <strong>'keywords'</strong> and <strong>'category'</strong>.</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-weight:normal'>Upload a file with the column headings <strong>'Keywords'</strong> and <strong>'Category'</strong>.</p>", unsafe_allow_html=True)
             epoch_input = st.text_input("How many epochs do you want to train with?", 100)
             epoch_input = int(epoch_input)
             ngram_input = st.text_input("How many ngrams do you want to use?", 2)
@@ -517,18 +517,18 @@ else:
                 dataset = pd.read_csv(dataset)
                 stop = stopwords.words('english')
                 #Apply the removal of the stopwords to the newly added cleaned reviews column
-                dataset['keywords'] = dataset['keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
-                dataset['keywords'] = dataset['keywords'].apply(lambda x: ' '.join(simple_preprocess(x)))
+                dataset['Keywords'] = dataset['Keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+                dataset['Keywords'] = dataset['Keywords'].apply(lambda x: ' '.join(simple_preprocess(x)))
                 # Prefixing each row of the category column with '__label__'
-                dataset['category'] = dataset['category'].apply(lambda x: '__label__' + x)
-                dataset[['category', 'keywords']].to_csv('train.txt',
+                dataset['Category'] = dataset['Category'].apply(lambda x: '__label__' + x)
+                dataset[['Category', 'Keywords']].to_csv('train.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
                                               quoting = csv.QUOTE_NONE,
                                               quotechar = "",
                                               escapechar = " ")
-                dataset[['category', 'keywords']].to_csv('test.txt',
+                dataset[['Category', 'Keywords']].to_csv('test.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
@@ -563,7 +563,7 @@ else:
                 model = fasttext.load_model(uploaded_model.name)
                 stop = stopwords.words('english')
         st.markdown('### 2. Classify your queries:')
-        st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'keywords'</strong>.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:normal'>Upload a file with the column heading <strong>'Keywords'</strong>.</p>", unsafe_allow_html=True)
         classify = st.file_uploader("Choose a CSV file", type='csv', key='9')
         if classify is not None:
             st.write("Classifying...")
@@ -571,7 +571,7 @@ else:
             classify = pd.read_csv(classify)
             #stop = stopwords.words('english')
             #Apply the removal of the stopwords to the newly added cleaned reviews column
-            classify['Processed'] = classify['keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+            classify['Processed'] = classify['Keywords'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
             classify['Processed']  = classify['Processed'].apply(lambda x: ' '.join(simple_preprocess(x)))
             def prediction(category):
                 '''Make text lowercase, remove text in square brackets, remove punctuation and remove words containing numbers.'''
@@ -579,10 +579,10 @@ else:
                 return predict
             round1 = lambda x: prediction(x)
             #Apply the function and create a new column
-            classify['predictions'] = classify.Processed.apply(round1)
-            classify['predictions'] = classify['predictions'].astype(str)
-            classify['predictions'] = classify['predictions'].replace(regex={r'\(\(\'__label__': ''})
-            classify['predictions'] = classify['predictions'].replace(regex={r'\'.*': ''})
+            classify['Predictions'] = classify.Processed.apply(round1)
+            classify['Predictions'] = classify['Predictions'].astype(str)
+            classify['Predictions'] = classify['Predictions'].replace(regex={r'\(\(\'__label__': ''})
+            classify['Predictions'] = classify['Predictions'].replace(regex={r'\'.*': ''})
             classify.drop(['Processed'], axis=1, inplace=True)
             st.markdown('### Download the full dataset:')
             st.markdown(get_table_download_link_eight(classify), unsafe_allow_html=True)
