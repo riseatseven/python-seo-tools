@@ -16,6 +16,7 @@ import random
 import csv
 import datetime
 from datetime import date
+from datetime import datetime
 import time
 import argparse
 #pytrends = TrendReq(proxies=[st.secrets["PROXY"]], retries=5, backoff_factor=5, requests_args={'verify':False})
@@ -542,7 +543,7 @@ else:
                 st.write("The test results are:")
                 st.write(test_results)
                 model = get_model()
-                now = datetime.datatime.now()
+                now = datetime.now()
                 timestamp = datetime.timestamp(now)
                 file_time = "model.bin" + timestamp
                 save_model(model, path=file_time)
