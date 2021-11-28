@@ -525,8 +525,8 @@ else:
                 dataset = np.random.rand(100, 2)
                 np.random.shuffle(dataset)
                 training, test = dataset[:80,:], dataset[80:,:]
-                dataset1 = pd.DataFrame(training, columns=['Keyword', 'Category'])
-                dataset2 = pd.DataFrame(test, columns=['Keyword', 'Category'])
+                dataset1 = pd.DataFrame(training, columns=['Keywords', 'Category'])
+                dataset2 = pd.DataFrame(test, columns=['Keywords', 'Category'])
                 dataset1[['Category', 'Keywords']].to_csv('train.txt',
                                               index = False,
                                               sep = ' ',
