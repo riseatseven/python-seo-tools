@@ -548,7 +548,7 @@ else:
                 file_time = "model.bin" +  str(timestamp)
                 save_model(model, path=file_time)
                 # Download saved trained model
-                with open(filetime, "rb") as f:
+                with open(file_time, "rb") as f:
                     btn = st.download_button(
                         label="Download trained text classification model",
                         data=f,
