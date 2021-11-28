@@ -542,7 +542,7 @@ else:
                 st.write("The test results are:")
                 st.write(test_results)
                 model = get_model()
-                now = datetime.now()
+                now = datetime.datatime.now()
                 timestamp = datetime.timestamp(now)
                 file_time = "model.bin" + timestamp
                 save_model(model, path=file_time)
