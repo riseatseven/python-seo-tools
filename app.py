@@ -191,6 +191,7 @@ else:
         return model
 
     # Save trained model to file
+    st.cache(persist=False)
     def save_model(model, path="model.bin"):
         model.save_model(path)
 
