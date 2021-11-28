@@ -186,7 +186,7 @@ else:
         return href
 
     # Cache trained model
-    @st.experimental_singleton
+    #@st.experimental_singleton
     def get_model():
         model = fasttext.train_supervised(input="train.txt")
         return model
