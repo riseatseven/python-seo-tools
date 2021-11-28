@@ -522,7 +522,7 @@ else:
                 dataset['Keywords'] = dataset['Keywords'].apply(lambda x: ' '.join(simple_preprocess(x)))
                 # Prefixing each row of the category column with '__label__'
                 dataset['Category'] = dataset['Category'].apply(lambda x: '__label__' + x)
-                dataset = np.random.rand(100, 5)
+                dataset = np.random.rand(100, 2)
                 np.random.shuffle(dataset)
                 training, test = dataset[:80,:], dataset[80:,:]
                 dataset1 = pd.DataFrame(training, columns=['Keyword', 'Category'])
