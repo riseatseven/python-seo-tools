@@ -522,15 +522,17 @@ else:
                 dataset['Keywords'] = dataset['Keywords'].apply(lambda x: ' '.join(simple_preprocess(x)))
                 # Prefixing each row of the category column with '__label__'
                 dataset['Category'] = dataset['Category'].apply(lambda x: '__label__' + x)
-                dataset1, dataset2 = np.split(dataset.sample(frac=1, random_state=42), [int(.9*len(dataset)), int(.1*len(dataset))])
-                dataset1[['Category', 'Keywords']].to_csv('train.txt',
+                dataset = np.random.rand(100, 5)
+                np.random.shuffle(dataset)
+                training, test = dataset[:80,:], dataset[80:,:]
+                training[['Category', 'Keywords']].to_csv('train.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
                                               quoting = csv.QUOTE_NONE,
                                               quotechar = "",
                                               escapechar = " ")
-                dataset2[['Category', 'Keywords']].to_csv('test.txt',
+                test[['Category', 'Keywords']].to_csv('test.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
