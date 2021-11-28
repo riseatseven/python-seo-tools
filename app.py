@@ -525,14 +525,14 @@ else:
                 dataset = np.random.rand(100, 5)
                 np.random.shuffle(dataset)
                 training, test = dataset[:80,:], dataset[80:,:]
-                training[['Category', 'Keywords']].to_csv('train.txt',
+                training.to_csv('train.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
                                               quoting = csv.QUOTE_NONE,
                                               quotechar = "",
                                               escapechar = " ")
-                test[['Category', 'Keywords']].to_csv('test.txt',
+                test.to_csv('test.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
