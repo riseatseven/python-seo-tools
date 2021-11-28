@@ -525,14 +525,18 @@ else:
                 dataset = np.random.rand(100, 5)
                 np.random.shuffle(dataset)
                 training, test = dataset[:80,:], dataset[80:,:]
-                training.to_csv('train.txt',
+                dataset1 = pd.DataFrame(columns=['Keyword', 'Category')
+                dataset1 = dataset1.append(training)
+                dataset2 = pd.DataFrame(columns=['Keyword', 'Category')
+                dataset2 = dataset1.append(test)
+                training[['Category', 'Keywords']].to_csv('train.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
                                               quoting = csv.QUOTE_NONE,
                                               quotechar = "",
                                               escapechar = " ")
-                test.to_csv('test.txt',
+                test[['Category', 'Keywords']].to_csv('test.txt',
                                               index = False,
                                               sep = ' ',
                                               header = None,
