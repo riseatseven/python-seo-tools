@@ -545,7 +545,7 @@ else:
                 model = get_model()
                 now = datetime.now()
                 timestamp = datetime.timestamp(now)
-                file_time = "model.bin" +  str(timestamp)
+                file_time = "model -" + str(timestamp) + ".bin"
                 save_model(model, path=file_time)
                 # Download saved trained model
                 with open(file_time, "rb") as f:
