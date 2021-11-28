@@ -542,13 +542,16 @@ else:
                 st.write("The test results are:")
                 st.write(test_results)
                 model = get_model()
-                save_model(model, path="model.bin")
+                now = datetime.now()
+                timestamp = datetime.timestamp(now)
+                file_time = "model.bin" + timestamp
+                save_model(model, path=file_time)
                 # Download saved trained model
-                with open("model.bin", "rb") as f:
+                with open(filetime, "rb") as f:
                     btn = st.download_button(
                         label="Download trained text classification model",
                         data=f,
-                        file_name="fasttext_model.bin" # Any file name
+                        file_name=file_time # Any file name
                      )
         if yesss:
             st.markdown('### Upload your model:')
