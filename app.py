@@ -70,6 +70,38 @@ else:
         return data3
 
     data3 = load_data()
+    
+    COVID_lockdown1 = pd.DataFrame({
+        'holiday': 'covid',
+        'ds':  pd.date_range(start='2020-03-23',
+                             end='2020-06-23',
+                             freq='D'),
+        'lower_window': 0,
+        'upper_window': 0,
+        'prior_scale': 1
+        })
+
+    COVID_lockdown2 = pd.DataFrame({
+        'holiday': 'covid',
+        'ds':  pd.date_range(start='2020-11-05',
+                             end='2020-12-02',
+                             freq='D'),
+        'lower_window': 0,
+        'upper_window': 0,
+        'prior_scale': 1
+        })
+
+    COVID_lockdown3 = pd.DataFrame({
+        'holiday': 'covid',
+        'ds':  pd.date_range(start='2021-01-06',
+                             end='2021-07-19',
+                             freq='D'),
+        'lower_window': 0,
+        'upper_window': 0,
+        'prior_scale': 1
+        })
+
+    holidays = pd.concat((COVID_lockdown1, COVID_lockdown2, COVID_lockdown3))
 
 
     def checker(wrong_options,correct_options):
@@ -397,13 +429,20 @@ else:
             frequency_input = 'M'
         period_input = st.text_input('How many periods into the future to do you want to forecast?', 365)
         period_input = int(period_input)
+        national_holidays = st.selectbox('Which national holidays do you want to add?', ['UK', 'US', 'Neither'], key='19')
+        lockdowns = st.selectbox('Do you want to add UK COVID-19 lockdowns?', ['Yes', 'No'], key='20')
         st.markdown("<p style='font-weight:normal'><strong>Now upload the populated file to get the forecast:</strong></p>", unsafe_allow_html=True)
         forecast_file = st.file_uploader("Choose a CSV file", type='csv', key='7')
         if forecast_file is not None:
             st.write("Forecasting...")
             df = pd.read_csv(forecast_file)
             df['ds'] = pd.to_datetime(df['ds'], dayfirst=True)
-            m = Prophet()
+            if lockdowns == 'Yes':
+                m = Prophet(holidays=holidays)
+            else:
+                m = Prophet()
+            if national_holidays != 'Neither':
+                m.add_country_holidays(country_name=national_holidays)
             m.fit(df)
             future = m.make_future_dataframe(periods=period_input, freq=frequency_input)
             future.tail()
