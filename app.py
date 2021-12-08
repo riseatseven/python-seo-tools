@@ -684,6 +684,9 @@ else:
                 fig.add_trace(go.Bar(x=final_df.index, y=final_df['Traffic Score Percentage'], name='Estimated Traffic Score',
                             marker_color='#ff0bac', text=final_df['Traffic Score Percentage']
                             ))
+            if not traffic:
+                visibility_score_sum.sort_values(by=['Visibility Score Percentage'], axis=0, ascending=False, inplace=True)
+                final_df = visibility_score_sum.head(5)
             if visibility:
                 fig.add_trace(go.Bar(x=final_df.index, y=final_df['Visibility Score Percentage'], name='Visibility Score',
                             marker_color='#a13bff', text=final_df['Visibility Score Percentage']
