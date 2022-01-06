@@ -345,6 +345,10 @@ if select =='Search volume gatherer':
     volumes_file = st.file_uploader("Choose a CSV file", type='csv', key='14')
     if volumes_file is not None:
         volumes_file = pd.read_csv(volumes_file)
+        volumes_file['keywords'].str.strip()
+        volumes_file['length'] = volumes_file.keywords.str.len()
+        volumes_file = volumes_file[volumes_file.length < 80]
+        volumes_file = volumes_file.drop(columns=['length'])
         df_list = volumes_file['keywords'].tolist()
         if locations_file is not None:
             if select =='All 50 US states':
