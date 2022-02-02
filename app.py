@@ -406,6 +406,7 @@ if select =='Search volume gatherer':
                     final_frame = final_frame.append(dataframe)
                 finalfinal_frame = finalfinal_frame.append(final_frame)
                 time.sleep(7  + random.random())
+        st.markdown(get_table_download_link_ten(final_frame), unsafe_allow_html=True)
         df_reference = pd.read_csv('all_locations_keywordtool.csv')
         joined_df = pd.merge(finalfinal_frame,
                  df_reference,
