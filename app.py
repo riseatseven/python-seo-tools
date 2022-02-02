@@ -406,14 +406,13 @@ if select =='Search volume gatherer':
                     final_frame = final_frame.append(dataframe)
                 finalfinal_frame = finalfinal_frame.append(final_frame)
                 time.sleep(7  + random.random())
-        st.markdown(get_table_download_link_ten(final_frame), unsafe_allow_html=True)
         df_reference = pd.read_csv('all_locations_keywordtool.csv')
         joined_df = pd.merge(finalfinal_frame,
                  df_reference,
                  on ='Location ID',
                  how ='inner')
         st.markdown('### Download the full dataset:')
-        st.markdown(get_table_download_link_ten(final_frame), unsafe_allow_html=True)
+        st.markdown(get_table_download_link_ten(joined_df), unsafe_allow_html=True)
 if select =='Forecasting tool':
     st.markdown("<h1 style='font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:2rem'><strong>Forecasting tool</strong></h2>", unsafe_allow_html=True)
     st.markdown("<p style='font-weight:normal'><strong>Firstly, populate the following template, keeping the column headings exactly as they are:</strong></p>", unsafe_allow_html=True)
