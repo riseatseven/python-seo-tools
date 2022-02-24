@@ -527,7 +527,7 @@ if select =='Keyword categoriser':
     if keyword_file is not None:
         st.write("Categorising...")
         df = querycat.pd.read_csv(keyword_file)
-        catz = querycat.Categorize(df, 'Keywords', min_support=user_input,  alg='apriori')
+        catz = querycat.Categorize(df, 'Keywords', min_support=user_input,  alg='fpgrowth')
         catz.df.drop('match_queries', axis=1, inplace=True)
         catz.df.rename(columns={'category': 'Category'}, inplace=True)
         st.markdown('### Here are the top 50 categories and the count of queries included in each:')
