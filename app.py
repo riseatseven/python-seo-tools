@@ -5,7 +5,7 @@ from PIL import Image
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import base64
-import querycat
+#import querycat
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
