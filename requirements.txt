@@ -2,3 +2,10 @@ streamlit
 fuzzywuzzy
 pandas
 mpmath
+python-Levenshtein 
+plotly
+prophet 
+pytrends 
+fasttext 
+nltk 
+genism
