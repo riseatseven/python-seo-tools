@@ -1,1 +1,2 @@
-"# website-behaviour-dashboard" 
+# Install Requirements
+python3 -m pip install -r requirements.txt
